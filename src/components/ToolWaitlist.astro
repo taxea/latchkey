@@ -1,0 +1,21 @@
+---
+/**
+ * Waitlist / early-access form for a tool that has not shipped yet.
+ * Posts to the newsletter signup with a tool-specific source tag so the launch list is segmented.
+ */
+import { SITE } from '@/lib/site';
+interface Props { tool: 'in-case' | 'serum'; heading?: string; sub?: string }
+const { tool, heading = 'Get early access', sub = 'Subscribers hear first, and founding members get the Vault price locked for life.' } = Astro.props;
+const id = `waitlist-${tool}`;
+---
+<div class="bg-ink text-cream rounded-brand p-6 md:p-8">
+  <p class="font-display font-black uppercase text-2xl mb-1 text-yellow">{heading}</p>
+  <p class="text-cream/80 mb-4">{sub}</p>
+  <form action={SITE.signupAction} method={SITE.signupMethod} class="flex flex-col sm:flex-row gap-2" data-signup={`tool-${tool}`}>
+    <label for={id} class="sr-only">Email address</label>
+    <input id={id} type="email" name="email" required autocomplete="email" placeholder="you@example.com" class="flex-1 rounded-brand border-2 border-white bg-white text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange" />
+    <input type="hidden" name="source" value={`tool-${tool}`} />
+    <button type="submit" class="btn btn-primary whitespace-nowrap">Join the list</button>
+  </form>
+  <p class="text-xs text-cream/60 mt-2">You also get the daily brief. Unsubscribe in one click.</p>
+</div>

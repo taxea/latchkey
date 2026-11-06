@@ -1,0 +1,70 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ToolWaitlist from '@/components/ToolWaitlist.astro';
+import Faq from '@/components/Faq.astro';
+import { TOOLS_APPS, MEMBERSHIP } from '@/lib/site';
+import { faqPage } from '@/lib/schema';
+
+const t = TOOLS_APPS.serum;
+const title = 'Serum: the private lab tracker';
+const description = 'Serum keeps every blood test in one place. Upload a Quest or Labcorp PDF or type the numbers, review each line, and see what is high, low or in range and how every marker has moved from draw to draw. For you, and for the parent whose three doctors do not talk to each other. Not a diagnosis and not medical advice.';
+const faq = [
+  { q: 'Which lab reports does it read?', a: 'Quest- and Labcorp-style PDFs are what it is built for; any report can be pasted as text or typed by hand. Nothing is saved until you review every line.' },
+  { q: 'What does "in range" mean?', a: 'If the lab printed a reference range, that range is used. If not, Serum falls back to a typical adult interval for markers it knows, and labels it as typical, not your lab\'s. If there is no range at all, the status stays unknown rather than guessed.' },
+  { q: 'Can I track my parents\' results too?', a: 'Vault members can add profiles for a spouse and parents and share the account with one other adult. The caregiving use is the point: one history across every doctor.' },
+  { q: 'Who can see my results?', a: 'You, and anyone you add to your household. Serum has no third-party scripts, no advertising, and your health data is never used for marketing, shared with sponsors or aggregated for publication. You can delete everything at any time.' },
+  { q: 'What does the free version include?', a: 'One profile and three draws: upload, review, the overview and the marker list. Unlimited history, trends across years, export and family profiles are part of Vault membership.' },
+];
+const schema = [
+  { '@type': 'SoftwareApplication', name: 'Serum by Latchkey', applicationCategory: 'HealthApplication', operatingSystem: 'Web', description, offers: [{ '@type': 'Offer', price: '0', priceCurrency: 'USD', name: 'Free: one profile, three draws' }, { '@type': 'Offer', price: String(MEMBERSHIP.vault.price), priceCurrency: 'USD', name: 'Vault membership, per year' }], publisher: { '@id': 'https://latchkeydaily.com/#organization' } },
+  faqPage(faq),
+];
+---
+<BaseLayout title={title} description={description} crumbs={[{ name: 'Tools', href: '/tools/' }, { name: 'Serum', href: t.href }]} schema={schema}>
+  <section class="container-site py-10 md:py-16 grid gap-10 md:grid-cols-5 items-start">
+    <div class="md:col-span-3">
+      <p class="tag mb-5"><span>Coming 2027 · Latchkey Tools</span></p>
+      <h1 class="uppercase text-5xl md:text-6xl">Serum</h1>
+      <p class="text-2xl font-display font-bold mt-3">Every blood test you've ever had, one history.</p>
+      <p class="text-lg text-muted mt-4">{description}</p>
+      <div class="mt-8"><ToolWaitlist tool="serum" /></div>
+    </div>
+    <div class="md:col-span-2 bg-cream rounded-brand p-6" aria-label="The three views">
+      <p class="eyebrow mb-3">Three views</p>
+      <ul class="space-y-3 text-[17px]">
+        <li><strong>Overview.</strong> The latest draw: what's out of range, furthest first, and what moved the most since last time, with a sparkline on every row.</li>
+        <li><strong>Markers.</strong> Lipids, metabolic, blood count, liver, kidney, electrolytes, thyroid, hormones, nutrients, inflammation. Open one and see every draw on a chart with the reference band behind it.</li>
+        <li><strong>Reports.</strong> The library of draws. Open, edit, delete, export.</li>
+      </ul>
+      <p class="text-sm text-muted mt-4">"LDL Cholesterol (calc)" and "LDL-C" land on the same marker, so the trend never splits.</p>
+    </div>
+  </section>
+
+  <section class="bg-olive text-cream">
+    <div class="container-site py-12 grid gap-8 md:grid-cols-3">
+      <div><p class="eyebrow text-yellow mb-2">Review before save</p><p class="text-cream/90">Serum reads the PDF, then shows you every line: name, value, unit, range. Fix a misread, drop a line, add one. Nothing is stored until you say so.</p></div>
+      <div><p class="eyebrow text-yellow mb-2">Built for the sandwich years</p><p class="text-cream/90">Add a profile for Mom. Her cardiologist, her nephrologist and her GP each see their own results; you see all of them, over time, in one place.</p></div>
+      <div><p class="eyebrow text-yellow mb-2">Private by construction</p><p class="text-cream/90">No third-party code, no ads, no sharing, delete any time. Health data is treated as regulated data because it is.</p></div>
+    </div>
+  </section>
+
+  <section class="container-site py-12 grid gap-6 md:grid-cols-2">
+    <div class="card">
+      <p class="eyebrow mb-1">Free, with the daily brief</p>
+      <h2 class="mt-0 text-2xl">One profile, three draws</h2>
+      <p class="text-muted">Upload a report, review it, and see the overview and the marker list. Enough to find out what Serum shows you that your insurer's portal doesn't.</p>
+      <p class="text-sm mt-3"><a href="/subscribe/">Subscribe free to get it at launch</a></p>
+    </div>
+    <div class="card border-orange">
+      <p class="eyebrow mb-1">Vault membership · ${MEMBERSHIP.vault.price}/yr, founding ${MEMBERSHIP.vault.founding}</p>
+      <h2 class="mt-0 text-2xl">The whole history, and the family</h2>
+      <p class="text-muted">Unlimited draws, trends across years, PDF parsing at volume, export, profiles for a spouse and parents, and household sharing. Plus In Case and everything in Reader.</p>
+      <p class="text-sm mt-3"><a href="/membership/">See membership</a></p>
+    </div>
+  </section>
+
+  <section class="container-site pb-12 prose-site">
+    <Faq items={faq} />
+    <p class="text-sm text-muted">Serum organizes numbers you provide. It is not a diagnosis and not medical advice. Check any flag against the original report and talk to your doctor. <a href="/family/caregiving/">Caring for a parent: the first 30 days.</a></p>
+  </section>
+</BaseLayout>

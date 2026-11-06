@@ -2,6 +2,8 @@
 import HubLayout from '@/layouts/HubLayout.astro';
 const tools = [
   { title: 'Is this a scam?', href: '/tools/is-this-a-scam/', blurb: 'Paste the text or email. Get a verdict and the matching scam page, and warn other readers.', eyebrow: 'Live' },
+  { title: 'In Case: the private family briefing', href: '/tools/in-case/', blurb: 'The packet your kids would need if you couldn\'t explain it yourself. Encrypted so we can\'t read it; a sealed family link if you stop showing up.', eyebrow: 'Coming 2027 · free + Vault' },
+  { title: 'Serum: the private lab tracker', href: '/tools/serum/', blurb: 'Every blood test in one history, for you and your parents. Upload the PDF, review every line, see what moved.', eyebrow: 'Coming 2027 · free + Vault' },
   { title: 'Family Security Score', href: '/tools/family-security-score/', blurb: 'A three-minute quiz: how hard a target is your family, and the five things to fix first.', eyebrow: 'Coming soon' },
   { title: 'Password checkup', href: '/tools/password-checkup/', blurb: 'Are you reusing passwords across accounts that matter? A private, on-device check.', eyebrow: 'Coming soon' },
   { title: 'Breach check', href: '/tools/breach-check/', blurb: 'Find out which breaches included your email, and what to change.', eyebrow: 'Coming soon' },
@@ -10,7 +12,7 @@ const tools = [
 <HubLayout
   title="Tools"
   eyebrow="Interactive"
-  description="Free tools that answer one question each: is this a scam, how exposed is my family, am I reusing passwords, was my email in a breach. Private by design: nothing you paste is stored unless you choose to report it."
+  description="Latchkey Tools: the scam checker, and two private apps built for the sandwich years. In Case is the family briefing your kids would need; Serum is the lab tracker that keeps every blood test in one history. Free tiers with the daily brief; the full versions with Vault membership. Private by construction: no ads, no tracking, delete any time."
   crumbs={[{ name: 'Tools', href: '/tools/' }]}
   startHere={tools}
   signupSource="tools"

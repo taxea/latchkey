@@ -1,0 +1,14 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { MEMBERSHIP } from '@/lib/site';
+---
+<BaseLayout title="Join the founding list" description="Membership opens in 2027. Founding members are invited first, from the subscriber list, and keep the founding price for life." noindex hideCrumbs>
+  <div class="container-site py-14 md:py-24 max-w-2xl">
+    <p class="tag mb-5"><span>Not open yet</span></p>
+    <h1 class="uppercase">Founding members are invited first.</h1>
+    <p class="text-lg mt-4 text-muted">Membership opens in September 2027 to the most engaged subscribers, then to everyone in October. Vault's founding price of ${MEMBERSHIP.vault.founding} a year is locked for life for that first cohort. The way onto the list is the free daily brief.</p>
+    <SignupForm source="membership-join" heading="Get on the list" sub="Free. Weekday mornings. Founding invitations go here first." />
+    <p class="text-sm text-muted">When membership opens, this page becomes the checkout, with sign-in by passkey through your Latchkey account.</p>
+  </div>
+</BaseLayout>

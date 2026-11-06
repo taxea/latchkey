@@ -51,6 +51,32 @@ export const SITE = {
   subscriberCount: 12000,
 } as const;
 
+/** The Latchkey tools. Each app lives on its own subdomain behind the shared Latchkey account; the marketing page lives here. */
+export const TOOLS_APPS = {
+  inCase: {
+    name: 'In Case',
+    tagline: 'The private family briefing: the packet your children would need if you could not explain your affairs.',
+    href: '/tools/in-case/',
+    appUrl: 'https://incase.latchkeydaily.com', // placeholder until the app ships
+    status: 'coming-soon' as const,
+  },
+  serum: {
+    name: 'Serum',
+    tagline: 'The private lab tracker: every blood test, every marker, one history.',
+    href: '/tools/serum/',
+    appUrl: 'https://serum.latchkeydaily.com', // placeholder until the app ships
+    status: 'coming-soon' as const,
+  },
+  accountUrl: 'https://account.latchkeydaily.com', // placeholder: the shared Latchkey account (passkeys)
+} as const;
+
+/** Membership tiers. Founding prices lock for life for the Phase 3 pilot cohort. */
+export const MEMBERSHIP = {
+  reader: { name: 'Reader', price: 19, period: 'year' },
+  vault: { name: 'Vault', price: 79, founding: 59, period: 'year' },
+  joinUrl: '/membership/join/',
+} as const;
+
 export const NAV = [
   { label: 'Scams', href: '/scams/' },
   { label: 'Protect', href: '/protect/' },
@@ -65,6 +91,7 @@ export const SECONDARY_NAV = [
   { label: 'Tools', href: '/tools/' },
   { label: 'Glossary', href: '/glossary/' },
   { label: 'Archive', href: '/newsletter/archive/' },
+  { label: 'Membership', href: '/membership/' },
   { label: 'About', href: '/about/' },
   { label: 'Report a scam', href: '/tools/is-this-a-scam/' },
 ] as const;

@@ -70,6 +70,16 @@ public/                favicon.svg, og-default.png, logo.png
 | Analytics | `src/layouts/BaseLayout.astro` | Add Cloudflare Web Analytics (privacy-friendly, no cookie banner) in the head. |
 | www redirect, HSTS | Cloudflare dashboard | Redirect Rule for www → apex; enable HSTS once the domain is live. |
 
+## Latchkey Tools (In Case, Serum) and membership
+
+The apps are not in this repo. They live on their own subdomains behind the shared Latchkey account, per the product spec:
+
+- `incase.latchkeydaily.com` — In Case, the private family briefing (own Worker, own D1, client-side encryption)
+- `serum.latchkeydaily.com` — Serum, the private lab tracker (own Worker, own D1 + R2)
+- `account.latchkeydaily.com` — sign-in (passkeys), membership status, Stripe webhooks, SSO token for both apps
+
+This site holds the marketing pages (`/tools/in-case/`, `/tools/serum/`), the membership sales page (`/membership/`) and the join placeholder. URLs and prices are in `TOOLS_APPS` and `MEMBERSHIP` in `src/lib/site.ts`; flip `status` to `live` and point `appUrl` at the real apps when they ship.
+
 ## AI search and SEO
 
 - `robots.txt` explicitly allows GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, Google-Extended, xAI and the search engines; disallows `/search/`, `/members/`, thank-you pages.

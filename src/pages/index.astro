@@ -3,7 +3,7 @@ import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SignupForm from '@/components/SignupForm.astro';
 import TopicIcon from '@/components/TopicIcon.astro';
-import { SITE, TOPICS, formatDate } from '@/lib/site';
+import { SITE, TOPICS, MEMBERSHIP, formatDate } from '@/lib/site';
 import { person } from '@/lib/schema';
 
 const issues = (await getCollection('issues')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -186,7 +186,30 @@ const schema = host ? [person({ name: host.data.name, slug: host.id, role: host.
     </div>
   </section>
 
-  <!-- 9. Latchkey Recommends -->
+  <!-- 9. Latchkey Tools: In Case and Serum -->
+  <section class="bg-cream border-y border-line">
+    <div class="container-site py-12">
+      <p class="eyebrow mb-2">Latchkey Tools · coming 2027</p>
+      <h2 class="mt-0">Two private tools your family will actually need</h2>
+      <div class="grid gap-4 md:grid-cols-2 mt-5">
+        <a href="/tools/in-case/" class="card no-underline hover:border-orange flex flex-col gap-2">
+          <span class="font-display font-black text-3xl text-ink">In Case</span>
+          <p class="font-semibold text-ink">The private family briefing.</p>
+          <p class="text-muted">The packet your kids would need if you couldn't explain it yourself: every account, property, policy and bill, who to call, and the plan for the first week. Encrypted so we can't read it. A sealed family link if you stop showing up.</p>
+          <span class="font-display font-bold uppercase text-sm text-orange-dark mt-auto">Free printable + Vault &rarr;</span>
+        </a>
+        <a href="/tools/serum/" class="card no-underline hover:border-orange flex flex-col gap-2">
+          <span class="font-display font-black text-3xl text-ink">Serum</span>
+          <p class="font-semibold text-ink">The private lab tracker.</p>
+          <p class="text-muted">Every blood test you've ever had, one history. Upload the PDF, review every line, see what's high, low and moving. Add a profile for Mom and see what her three doctors don't.</p>
+          <span class="font-display font-bold uppercase text-sm text-orange-dark mt-auto">Free tier + Vault &rarr;</span>
+        </a>
+      </div>
+      <p class="text-sm text-muted mt-4"><a href="/membership/">Vault membership</a> includes both tools in full for your household. Founding price ${MEMBERSHIP.vault.founding}/year, locked for life.</p>
+    </div>
+  </section>
+
+  <!-- 10. Latchkey Recommends -->
   {recs.length > 0 && (
     <section class="container-site py-12">
       <p class="eyebrow mb-2">Latchkey Recommends</p>

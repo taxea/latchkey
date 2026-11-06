@@ -19,7 +19,8 @@ export async function buildLlms(full: boolean): Promise<string> {
   lines.push(`- [Glossary](${SITE.url}/glossary/): One-sentence plain-English definitions of security, tech, money and estate terms.`);
   lines.push(`- [Newsletter archive](${SITE.url}/newsletter/archive/): Every issue in full.`);
   lines.push(`- [Watch](${SITE.url}/watch/): Videos with full transcripts.`);
-  lines.push(`- [Tools](${SITE.url}/tools/): Is this a scam? checker and more.`);
+  lines.push(`- [Tools](${SITE.url}/tools/): Is this a scam? checker, In Case (the private family briefing) and Serum (the private lab tracker).`);
+  lines.push(`- [Membership](${SITE.url}/membership/): Reader ($19/yr) and Vault ($79/yr, founding $59) tiers; Vault includes In Case and Serum in full for a household.`);
   lines.push(`- [About](${SITE.url}/about/): Team, editorial policy, how AI is used, ownership, press.`);
   lines.push('');
   lines.push('## Most useful pages');
@@ -30,6 +31,8 @@ export async function buildLlms(full: boolean): Promise<string> {
   lines.push(`- [Freeze your credit and stop identity theft](${SITE.url}/protect/identity-theft/)`);
   lines.push(`- [IRS notices decoded by number](${SITE.url}/taxes/irs-notices/)`);
   lines.push(`- [Unfiled tax returns: what actually happens](${SITE.url}/taxes/unfiled-returns/)`);
+  lines.push(`- [In Case: the private family briefing](${SITE.url}/tools/in-case/)`);
+  lines.push(`- [Serum: the private lab tracker](${SITE.url}/tools/serum/)`);
   lines.push(`- [Editorial policy](${SITE.url}/about/editorial-policy/)`);
   lines.push(`- [How we use AI](${SITE.url}/about/how-we-use-ai/)`);
   lines.push('');

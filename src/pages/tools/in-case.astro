@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ToolWaitlist from '@/components/ToolWaitlist.astro';
+import Faq from '@/components/Faq.astro';
+import { TOOLS_APPS, MEMBERSHIP } from '@/lib/site';
+import { faqPage } from '@/lib/schema';
+
+const t = TOOLS_APPS.inCase;
+const title = 'In Case: the private family briefing';
+const description = 'In Case is the packet your children would need if you died or could not explain your affairs: a living inventory of accounts, property, insurance and bills, the people to call, and the plan for the first day, week and month. Not a bank connection, not a password manager. Encrypted so that even Latchkey cannot read it.';
+const faq = [
+  { q: 'Is In Case a password manager?', a: 'No. In Case is the map; 1Password is the key ring. Each item can point at a 1Password link, and the briefing tells your family how Emergency Access works. Passwords are not meant to live here.' },
+  { q: 'Can Latchkey read my vault?', a: 'No. Everything you enter is encrypted in your browser with a passphrase only you hold. We store ciphertext and timestamps. If you lose the passphrase and the printed recovery kit, nobody can recover the vault, including us.' },
+  { q: 'What is the dead man\'s switch?', a: 'An optional timer. It stays sealed while you open the vault or mark your monthly review. If two months in a row are missed, after warnings to you, a separate family link opens a read-only copy of the briefing for the one person you named.' },
+  { q: 'What does the free version include?', a: 'The printable briefing: the letter, the completeness checklist and the Plan, filled in on your screen and downloaded as a PDF. Nothing is stored with us. The hosted vault, monthly reminders, the cash picture and the switch are part of Vault membership.' },
+  { q: 'Does it connect to my bank?', a: 'No. Once a month you type balances or import a positions file from your brokerage. Nothing connects to Chase, Fidelity or the IRS, by design.' },
+];
+const schema = [
+  { '@type': 'SoftwareApplication', name: 'In Case by Latchkey', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', description, offers: [{ '@type': 'Offer', price: '0', priceCurrency: 'USD', name: 'Free printable briefing' }, { '@type': 'Offer', price: String(MEMBERSHIP.vault.price), priceCurrency: 'USD', name: 'Vault membership, per year' }], publisher: { '@id': 'https://latchkeydaily.com/#organization' } },
+  faqPage(faq),
+];
+---
+<BaseLayout title={title} description={description} crumbs={[{ name: 'Tools', href: '/tools/' }, { name: 'In Case', href: t.href }]} schema={schema}>
+  <section class="container-site py-10 md:py-16 grid gap-10 md:grid-cols-5 items-start">
+    <div class="md:col-span-3">
+      <p class="tag mb-5"><span>Coming 2027 · Latchkey Tools</span></p>
+      <h1 class="uppercase text-5xl md:text-6xl">In Case</h1>
+      <p class="text-2xl font-display font-bold mt-3">The packet your kids would need if you couldn't explain it yourself.</p>
+      <p class="text-lg text-muted mt-4">{description}</p>
+      <div class="mt-8"><ToolWaitlist tool="in-case" /></div>
+    </div>
+    <div class="md:col-span-2 bg-cream rounded-brand p-6" aria-label="What In Case holds">
+      <p class="eyebrow mb-3">What's in the briefing</p>
+      <ul class="space-y-3 text-[17px]">
+        <li><strong>Home.</strong> The letter, who it's for, where the will and papers are, the executor, how 1Password Emergency Access works, and a completeness list.</li>
+        <li><strong>Records.</strong> Money, Estate, Owns, Insurance and Bills: every account, property, policy and auto-pay, with how each one passes (will, TOD, POD, joint, trust, beneficiary).</li>
+        <li><strong>People.</strong> Executor, attorney, CPA, advisor, insurance agent, family. Who to call.</li>
+        <li><strong>Plan.</strong> The order of work: first day, first week, first month, later.</li>
+        <li><strong>Standing.</strong> Assets, debt, net worth and the 90-day cash picture, updated once a month by you.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-ink text-cream">
+    <div class="container-site py-12 grid gap-8 md:grid-cols-3">
+      <div><p class="eyebrow text-yellow mb-2">The map, not the keys</p><p class="text-cream/85">Passwords don't live here. Each item points at 1Password. The briefing says so in plain language, so your family knows where the keys are and this site tells them which doors.</p></div>
+      <div><p class="eyebrow text-yellow mb-2">Encrypted so we can't read it</p><p class="text-cream/85">Your vault is encrypted in your browser with a passphrase only you hold. Latchkey stores ciphertext. There is no "forgot passphrase" button, which is why you print the recovery kit.</p></div>
+      <div><p class="eyebrow text-yellow mb-2">If you stop showing up</p><p class="text-cream/85">Arm the switch. It stays sealed while you check in monthly. Miss two months in a row and the one family member you named gets a read-only copy. Until then, their link only says it's locked.</p></div>
+    </div>
+  </section>
+
+  <section class="container-site py-12 grid gap-6 md:grid-cols-2">
+    <div class="card">
+      <p class="eyebrow mb-1">Free, with the daily brief</p>
+      <h2 class="mt-0 text-2xl">The printable briefing</h2>
+      <p class="text-muted">The letter, the completeness checklist and the Plan, filled in on your screen and downloaded as a PDF. Nothing is stored with us. It is the document you would hand an attorney.</p>
+      <p class="text-sm mt-3"><a href="/subscribe/">Subscribe free to get it at launch</a></p>
+    </div>
+    <div class="card border-orange">
+      <p class="eyebrow mb-1">Vault membership · ${MEMBERSHIP.vault.price}/yr, founding ${MEMBERSHIP.vault.founding}</p>
+      <h2 class="mt-0 text-2xl">The living vault</h2>
+      <p class="text-muted">The hosted, encrypted vault with monthly review reminders, the cash picture, brokerage import, a co-owner for your spouse, the dead man's switch and the sealed family link. Plus Serum and everything in Reader.</p>
+      <p class="text-sm mt-3"><a href="/membership/">See membership</a></p>
+    </div>
+  </section>
+
+  <section class="container-site pb-12 prose-site">
+    <Faq items={faq} />
+    <p class="text-sm text-muted">In Case does not give legal advice and does not replace a will, a trust or an attorney. It is the map your family uses to find them. <a href="/estate/checklist/">The estate checklist most people put off.</a></p>
+  </section>
+</BaseLayout>

@@ -1,0 +1,85 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Faq from '@/components/Faq.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { MEMBERSHIP, SITE } from '@/lib/site';
+import { faqPage } from '@/lib/schema';
+
+const title = 'Membership';
+const description = `Latchkey Daily membership: Reader at $${MEMBERSHIP.reader.price} a year for the ad-free edition, the kits, vendor deals and the live Q&A; Vault at $${MEMBERSHIP.vault.price} a year (founding $${MEMBERSHIP.vault.founding}) adds In Case, the private family briefing, and Serum, the private lab tracker, for your whole household.`;
+const faq = [
+  { q: 'When does membership open?', a: 'Founding members are invited in September 2027, starting with the most engaged readers; public membership opens in October. Subscribe free now and you are on the list.' },
+  { q: 'Is the daily brief still free?', a: 'Yes, always. Membership adds the ad-free edition, the tools and the extras; it never takes the brief away from anyone.' },
+  { q: 'What does "founding price locked for life" mean?', a: 'Anyone who joins Vault during the founding period keeps that price for as long as they stay a member, whatever the public price becomes.' },
+  { q: 'Can my spouse use the tools?', a: 'Vault includes household sharing with one other adult: the same In Case vault, the same Serum profiles, their own passkey.' },
+  { q: 'How do I sign in?', a: 'With a passkey: your face, fingerprint or device PIN. No password to remember or to phish. It is what we tell readers to use, so it is what we built.' },
+];
+const schema = [
+  { '@type': 'Product', name: 'Latchkey Daily Membership', description, brand: { '@type': 'Brand', name: SITE.name }, offers: [
+    { '@type': 'Offer', name: 'Reader', price: String(MEMBERSHIP.reader.price), priceCurrency: 'USD', availability: 'https://schema.org/PreOrder' },
+    { '@type': 'Offer', name: 'Vault (founding)', price: String(MEMBERSHIP.vault.founding), priceCurrency: 'USD', availability: 'https://schema.org/PreOrder' },
+  ] },
+  faqPage(faq),
+];
+const rows = [
+  { f: 'The daily brief, the site, the scam database and every guide', free: true, reader: true, vault: true },
+  { f: 'Ad-free edition of the brief', free: false, reader: true, vault: true },
+  { f: 'Do This Now archive, quarterly live Q&A, ask-a-human email line', free: false, reader: true, vault: true },
+  { f: 'Vetted vendor deals negotiated for members', free: false, reader: true, vault: true },
+  { f: 'In Case: printable family briefing, checklist and Plan', free: true, reader: true, vault: true },
+  { f: 'In Case: hosted encrypted vault, monthly review, cash picture, brokerage import', free: false, reader: false, vault: true },
+  { f: "In Case: dead man's switch and sealed family link", free: false, reader: false, vault: true },
+  { f: 'Serum: upload a report, see the overview, keep three draws', free: true, reader: true, vault: true },
+  { f: 'Serum: unlimited history, trends, export', free: false, reader: false, vault: true },
+  { f: 'Serum: profiles for a spouse and parents', free: false, reader: false, vault: true },
+  { f: 'Household sharing with one other adult', free: false, reader: false, vault: true },
+];
+const mark = (v: boolean) => v ? '<span class="text-olive font-black" aria-label="included">&#10003;</span>' : '<span class="text-line" aria-label="not included">&mdash;</span>';
+---
+<BaseLayout title={title} description={description} crumbs={[{ name: 'Membership', href: '/membership/' }]} schema={schema}>
+  <section class="container-site py-10 md:py-16">
+    <p class="tag mb-5"><span>Opens 2027 · founding prices locked for life</span></p>
+    <h1 class="uppercase text-5xl md:text-6xl">Membership</h1>
+    <p class="text-lg md:text-xl text-muted mt-4 max-w-3xl">The brief stays free. Membership is for the things worth keeping: the ad-free edition, the deals, and two private tools your family will actually need.</p>
+
+    <div class="grid gap-4 md:grid-cols-3 mt-10 items-stretch">
+      <div class="card flex flex-col gap-3">
+        <p class="eyebrow">Free</p>
+        <p class="font-display font-black text-4xl">$0</p>
+        <p class="text-muted">The daily brief, the whole site, the printable In Case briefing, and Serum with three draws.</p>
+        <a href="/subscribe/" class="btn btn-outline mt-auto">Subscribe free</a>
+      </div>
+      <div class="card flex flex-col gap-3">
+        <p class="eyebrow">Reader</p>
+        <p class="font-display font-black text-4xl">${MEMBERSHIP.reader.price}<span class="text-lg text-muted font-sans font-normal">/year</span></p>
+        <p class="text-muted">Ad-free, the archive and kits, the live Q&A, the ask-a-human line and the vendor deals.</p>
+        <a href={MEMBERSHIP.joinUrl} class="btn btn-dark mt-auto">Join the founding list</a>
+      </div>
+      <div class="card flex flex-col gap-3 border-orange bg-ink text-cream">
+        <p class="eyebrow text-yellow">Vault · everything, plus the tools</p>
+        <p class="font-display font-black text-4xl">${MEMBERSHIP.vault.founding}<span class="text-lg text-cream/70 font-sans font-normal">/year founding</span></p>
+        <p class="text-cream/80">Reader, plus In Case and Serum in full, for your whole household. ${MEMBERSHIP.vault.price} after the founding period.</p>
+        <a href={MEMBERSHIP.joinUrl} class="btn btn-primary mt-auto">Join the founding list</a>
+      </div>
+    </div>
+
+    <div class="mt-12 overflow-x-auto">
+      <table class="w-full text-[15px] md:text-base border-collapse">
+        <thead><tr class="bg-cream"><th class="text-left p-3">What you get</th><th class="p-3">Free</th><th class="p-3">Reader</th><th class="p-3">Vault</th></tr></thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr class="border-b border-line"><td class="p-3">{r.f}</td><td class="p-3 text-center" set:html={mark(r.free)} /><td class="p-3 text-center" set:html={mark(r.reader)} /><td class="p-3 text-center" set:html={mark(r.vault)} /></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 mt-12">
+      <a href="/tools/in-case/" class="card no-underline hover:border-orange"><p class="eyebrow mb-1">Latchkey Tools</p><span class="font-display font-black text-2xl text-ink">In Case</span><p class="text-muted mt-1">The private family briefing. The packet your kids would need if you couldn't explain it yourself. &rarr;</p></a>
+      <a href="/tools/serum/" class="card no-underline hover:border-orange"><p class="eyebrow mb-1">Latchkey Tools</p><span class="font-display font-black text-2xl text-ink">Serum</span><p class="text-muted mt-1">The private lab tracker. Every blood test, every marker, one history, for you and your parents. &rarr;</p></a>
+    </div>
+
+    <SignupForm source="membership" heading="Not open yet. Get on the founding list." sub="Subscribe free; founding invitations go to subscribers first, most engaged first." />
+    <div class="prose-site"><Faq items={faq} /></div>
+  </section>
+</BaseLayout>
