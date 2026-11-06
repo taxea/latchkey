@@ -1,0 +1,15 @@
+---
+import { legalPages as pages } from '@/data/legal-pages';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { SITE } from '@/lib/site';
+
+
+export function getStaticPaths() {
+  return Object.keys(pages).map((legal) => ({ params: { legal } }));
+}
+const key = Astro.params.legal as keyof typeof pages;
+const page = pages[key];
+---
+<ArticleLayout title={page.title} description={page.description} crumbs={[{ name: page.title, href: `/${key}/` }]} answer={page.answer} updated="2027-02-01" isArticle={false} signupSource={key}>
+  <Fragment set:html={page.html} />
+</ArticleLayout>

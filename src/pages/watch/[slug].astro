@@ -1,0 +1,44 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import RelatedPages from '@/components/RelatedPages.astro';
+import { videoObject } from '@/lib/schema';
+import { formatDate } from '@/lib/site';
+
+export async function getStaticPaths() {
+  const videos = await getCollection('videos');
+  return videos.map((v) => ({ params: { slug: v.id }, props: { video: v } }));
+}
+const { video } = Astro.props;
+const { Content } = await render(video);
+const d = video.data;
+const url = `/watch/${video.id}/`;
+const guide = d.guide ? await getEntry('guides', d.guide) : null;
+const scam = d.scam ? await getEntry('scams', d.scam) : null;
+const transcript = video.body?.replace(/\s+/g, ' ').trim();
+const schema = [videoObject({ url, name: d.title, description: d.description, youtubeId: d.youtubeId, uploadDate: d.uploadDate, duration: d.duration, transcript })];
+const related = [
+  ...(guide ? [{ title: guide.data.title, href: `/protect/${guide.id}/`, blurb: guide.data.atRisk, eyebrow: 'The guide' }] : []),
+  ...(scam ? [{ title: scam.data.title, href: `/scams/${scam.id}/`, blurb: scam.data.definition, eyebrow: 'The scam' }] : []),
+];
+---
+<BaseLayout title={d.title} description={d.description} crumbs={[{ name: 'Watch', href: '/watch/' }, { name: d.title, href: url }]} schema={schema} published={d.uploadDate} updated={d.uploadDate} type="article" ogImage={`https://i.ytimg.com/vi/${d.youtubeId}/maxresdefault.jpg`}>
+  <article class="container-site py-8 md:py-12">
+    <p class="eyebrow mb-2">{d.series.replace(/-/g, ' ')} · {formatDate(d.uploadDate)}</p>
+    <h1>{d.title}</h1>
+    <div class="aspect-video w-full max-w-4xl mt-6 rounded-brand overflow-hidden bg-ink">
+      <iframe src={`https://www.youtube-nocookie.com/embed/${d.youtubeId}`} title={d.title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+    </div>
+    <div class="prose-site">
+      <p class="bg-yellow/60 rounded-brand px-5 py-4 my-6"><strong class="font-display uppercase mr-2">The action:</strong>{d.action}</p>
+      <p class="text-lg">{d.description}</p>
+      <SignupForm source={`video-${video.id}`} heading="The brief that goes with the video" sub="Every weekday: the scam, the fix, the one thing to do." />
+      <details class="my-8" open>
+        <summary class="font-display font-bold text-xl cursor-pointer">Transcript</summary>
+        <div class="mt-4 text-muted"><Content /></div>
+      </details>
+    </div>
+    <RelatedPages items={related} />
+  </article>
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { SITE } from '@/lib/site';
+const subs = SITE.subscriberCount.toLocaleString('en-US');
+---
+<BaseLayout title="Subscribe" description={SITE.description} hideCrumbs>
+  <div class="container-site py-14 md:py-24 max-w-3xl">
+    <p class="tag mb-5"><span>Free. Weekday mornings.</span></p>
+    <h1 class="uppercase text-5xl md:text-6xl">The Gen X guide to life in the middle.</h1>
+    <p class="text-lg md:text-xl mt-6">{SITE.description}</p>
+    <div class="mt-8">
+      <SignupForm variant="hero" source="subscribe-page" />
+    </div>
+    <ul class="mt-8 grid gap-3 sm:grid-cols-3 text-sm">
+      <li class="card"><strong class="font-display block">{subs} readers</strong> and growing every week.</li>
+      <li class="card"><strong class="font-display block">Five minutes</strong> Three items, one action. Read it with coffee.</li>
+      <li class="card"><strong class="font-display block">Forward-worthy</strong> Built to be sent to your brother, your mom, your kid.</li>
+    </ul>
+    <p class="text-sm text-muted mt-6"><a href="/newsletter/sample/">Read a sample issue first.</a> No spam, ever. We never sell your address. <a href="/privacy/">Privacy policy.</a></p>
+  </div>
+</BaseLayout>

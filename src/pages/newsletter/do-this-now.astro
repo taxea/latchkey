@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { formatDate } from '@/lib/site';
+const issues = (await getCollection('issues')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const description = 'Every action from every issue, in one running checklist. The Friday email collects the week\'s; this page keeps all of them.';
+---
+<BaseLayout title="Do This Now: every action, one list" description={description} crumbs={[{ name: 'Newsletter', href: '/newsletter/' }, { name: 'Do This Now', href: '/newsletter/do-this-now/' }]}>
+  <div class="container-site py-8 md:py-12">
+    <p class="eyebrow mb-2">The checklist</p>
+    <h1 class="uppercase">Do This Now</h1>
+    <p class="text-lg text-muted mt-3 max-w-3xl">{description}</p>
+    <SignupForm source="do-this-now" heading="Get Friday's checklist" sub="The week's actions, one email, every Friday." />
+    <ul class="list-none pl-0 divide-y divide-line border-y border-line max-w-3xl">
+      {issues.map((i) => (
+        <li class="py-3 flex gap-3 items-start">
+          <span class="mt-1.5 w-4 h-4 rounded border-2 border-ink shrink-0" aria-hidden="true"></span>
+          <div>
+            <p class="font-semibold">{i.data.action}</p>
+            <p class="text-xs text-muted">From <a href={`/newsletter/issues/${i.id}/`}>{i.data.title}</a>, {formatDate(i.data.date)}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

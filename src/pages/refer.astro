@@ -1,0 +1,18 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+---
+<BaseLayout title="Refer a friend" description="Share Latchkey Daily. Three referrals earns the Deadbolt checklist; ten earns the Family Setup Kit; twenty-five earns the Latchkey Daily mug." hideCrumbs>
+  <div class="container-site py-14 md:py-20 max-w-3xl">
+    <p class="eyebrow mb-2">Referrals</p>
+    <h1 class="uppercase">Send it to your brother.</h1>
+    <p class="text-lg mt-4">Every issue has your personal referral link at the bottom. When someone subscribes through it, you both get credit, and the rewards stack.</p>
+    <ul class="grid gap-3 sm:grid-cols-3 mt-8 list-none pl-0">
+      <li class="card"><span class="font-display font-black text-4xl text-orange">3</span><p class="font-display font-bold">The Deadbolt checklist</p><p class="text-sm text-muted">The printable one-page lockdown list.</p></li>
+      <li class="card"><span class="font-display font-black text-4xl text-orange">10</span><p class="font-display font-bold">The Family Setup Kit</p><p class="text-sm text-muted">The full printable kit for a parent's phone.</p></li>
+      <li class="card"><span class="font-display font-black text-4xl text-orange">25</span><p class="font-display font-bold">The mug</p><p class="text-sm text-muted">Enamel. Orange L. Shipped.</p></li>
+    </ul>
+    <p class="mt-8">Not subscribed yet? Your link appears in your first issue.</p>
+    <SignupForm source="refer" />
+  </div>
+</BaseLayout>

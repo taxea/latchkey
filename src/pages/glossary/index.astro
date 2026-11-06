@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { collectionPage } from '@/lib/schema';
+const terms = (await getCollection('glossary')).sort((a, b) => a.data.term.localeCompare(b.data.term));
+const letters = [...new Set(terms.map((t) => t.data.term[0].toUpperCase()))];
+const description = 'Plain-English definitions of every term that shows up in scams, security, technology, money and estate planning: phishing, smishing, passkey, SIM swap, deepfake, RMD, power of attorney and hundreds more. One sentence each, then why it matters to you.';
+const schema = [
+  { '@type': 'DefinedTermSet', '@id': 'https://latchkeydaily.com/glossary/', name: 'Latchkey Daily Glossary', description },
+  collectionPage({ url: '/glossary/', title: 'Glossary', description, items: terms.map((t) => ({ name: t.data.term, href: `/glossary/${t.id}/` })) }),
+];
+---
+<BaseLayout title="Glossary" description={description} crumbs={[{ name: 'Glossary', href: '/glossary/' }]} schema={schema}>
+  <div class="container-site py-8 md:py-12">
+    <p class="eyebrow mb-2">{terms.length} terms</p>
+    <h1 class="uppercase">Glossary</h1>
+    <p class="text-lg text-muted mt-4 max-w-3xl">{description}</p>
+    <nav class="flex flex-wrap gap-2 mt-6" aria-label="Jump to letter">
+      {letters.map((l) => <a href={`#${l}`} class="w-9 h-9 flex items-center justify-center bg-cream rounded-lg font-display font-bold no-underline hover:bg-yellow text-ink">{l}</a>)}
+    </nav>
+    <SignupForm source="glossary" heading="New terms, explained, every weekday" sub="When a new scam or a new piece of tech shows up, we define it in plain English." />
+    {letters.map((l) => (
+      <section id={l} class="mt-8">
+        <h2 class="mt-0 text-orange">{l}</h2>
+        <dl class="divide-y divide-line border-y border-line">
+          {terms.filter((t) => t.data.term[0].toUpperCase() === l).map((t) => (
+            <div class="py-3 grid gap-1 md:grid-cols-4">
+              <dt class="font-display font-bold md:col-span-1"><a href={`/glossary/${t.id}/`} class="text-ink">{t.data.term}</a></dt>
+              <dd class="text-muted md:col-span-3">{t.data.definition}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    ))}
+  </div>
+</BaseLayout>

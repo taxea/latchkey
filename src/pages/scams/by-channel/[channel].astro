@@ -1,0 +1,22 @@
+---
+import { scamChannels as channels } from '@/data/scam-channels';
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+
+
+export async function getStaticPaths() {
+  return Object.keys(channels).map((channel) => ({ params: { channel } }));
+}
+const channel = Astro.params.channel as keyof typeof channels;
+const meta = channels[channel];
+const scams = (await getCollection('scams', (s) => s.data.channels.includes(channel))).sort((a, b) => b.data.readerReports - a.data.readerReports);
+---
+<HubLayout
+  title={meta.label}
+  eyebrow="Scams by how they reach you"
+  description={meta.blurb}
+  crumbs={[{ name: 'Scams', href: '/scams/' }, { name: meta.label, href: `/scams/by-channel/${channel}/` }]}
+  index={[{ heading: `${scams.length} scams in this category`, items: scams.map((s) => ({ title: s.data.title, href: `/scams/${s.id}/`, blurb: s.data.definition })) }]}
+  facets={[{ heading: 'Other channels', links: Object.entries(channels).filter(([k]) => k !== channel).map(([k, v]) => ({ label: v.label.replace(' scams', ''), href: `/scams/by-channel/${k}/` })) }]}
+  signupSource="scams-channel"
+/>

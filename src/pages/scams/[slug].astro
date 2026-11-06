@@ -1,0 +1,99 @@
+---
+/**
+ * Scam record template: definition sentence, what it looks like, how it works, red flags,
+ * what to do now, if you already paid, report it, latest alert, reader report count, related.
+ */
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Byline from '@/components/Byline.astro';
+import KeyFacts from '@/components/KeyFacts.astro';
+import Faq from '@/components/Faq.astro';
+import RelatedPages from '@/components/RelatedPages.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { article, faqPage } from '@/lib/schema';
+import { formatDate } from '@/lib/site';
+
+export async function getStaticPaths() {
+  const scams = await getCollection('scams');
+  return scams.map((s) => ({ params: { slug: s.id }, props: { scam: s } }));
+}
+const { scam } = Astro.props;
+const { Content } = await render(scam);
+const d = scam.data;
+const url = `/scams/${scam.id}/`;
+
+const alerts = (await getCollection('alerts', (a) => a.data.scam === scam.id)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latestAlert = alerts[0];
+const related = (await Promise.all(d.related.map((id) => getEntry('scams', id)))).filter(Boolean);
+const guides = (await Promise.all(d.guides.map((id) => getEntry('guides', id)))).filter(Boolean);
+
+const faq = [
+  { q: `What is ${d.title.toLowerCase()}?`, a: d.definition },
+  { q: `What should I do if I got ${d.title.toLowerCase().startsWith('the') ? d.title.toLowerCase() : 'this'}?`, a: d.whatToDo.join(' ') },
+  ...(d.ifYouPaid.length ? [{ q: 'What if I already paid or gave information?', a: d.ifYouPaid.join(' ') }] : []),
+  ...d.faq,
+];
+const description = `${d.definition} Red flags, what to do now, what to do if you already paid, and where to report it.`;
+const schema = [
+  article({ url, title: d.title, description, published: d.published, updated: d.updated, authorSlug: 'team', about: [d.title, ...d.aliases] }),
+  faqPage(faq),
+];
+const relatedItems = [
+  ...related.map((r) => ({ title: r!.data.title, href: `/scams/${r!.id}/`, blurb: r!.data.definition, eyebrow: 'Related scam' })),
+  ...guides.map((g) => ({ title: g!.data.title, href: `/protect/${g!.id}/`, blurb: g!.data.atRisk, eyebrow: 'Lockdown guide' })),
+];
+---
+<BaseLayout title={d.title} description={description} crumbs={[{ name: 'Scams', href: '/scams/' }, { name: d.title, href: url }]} schema={schema} published={d.published} updated={d.updated} type="article">
+  <article class="container-site py-8 md:py-12">
+    <header class="max-w-3xl">
+      <p class="eyebrow mb-2">Scam record · {d.readerReports.toLocaleString()} reader reports</p>
+      <h1>{d.title}</h1>
+      {d.aliases.length > 0 && <p class="text-sm text-muted mt-2">Also called: {d.aliases.join(', ')}</p>}
+      <Byline author="team" reviewedBy={d.reviewedBy} published={d.published} updated={d.updated} />
+      <p class="text-lg md:text-xl leading-relaxed">{d.definition}</p>
+    </header>
+
+    {latestAlert && (
+      <aside class="my-6 max-w-3xl border-2 border-orange bg-white rounded-brand p-5" aria-label="Latest alert">
+        <p class="eyebrow mb-1">Latest alert · {formatDate(latestAlert.data.date)} · {latestAlert.data.status}</p>
+        <a href={`/scams/alerts/${latestAlert.id}/`} class="font-display font-bold text-lg text-ink">{latestAlert.data.title}</a>
+        <p class="text-muted mt-1">{latestAlert.data.summary}</p>
+      </aside>
+    )}
+
+    <div class="prose-site">
+      <KeyFacts title="Red flags" items={d.redFlags} />
+
+      <section id="what-to-do">
+        <h2>What to do right now</h2>
+        <ol>{d.whatToDo.map((s) => <li>{s}</li>)}</ol>
+      </section>
+
+      <SignupForm source={`scam-${scam.id}`} heading="Get the next one before it gets you" sub="Every weekday: the scam going around, decoded, and the fix." />
+
+      <section id="how-it-works">
+        <h2>How it works</h2>
+        <Content />
+      </section>
+
+      {d.ifYouPaid.length > 0 && (
+        <section id="if-you-paid">
+          <h2>If you already paid or gave information</h2>
+          <ol>{d.ifYouPaid.map((s) => <li>{s}</li>)}</ol>
+        </section>
+      )}
+
+      <section id="report">
+        <h2>Where to report it</h2>
+        <ul>
+          {d.reportTo.map((r) => <li><a href={r.url} rel="noopener">{r.name}</a></li>)}
+          <li><a href="/tools/is-this-a-scam/">Report it to Latchkey Daily</a> so we can warn other readers</li>
+        </ul>
+        <p class="text-sm text-muted">Reaches you by: {d.channels.map((c) => <a href={`/scams/by-channel/${c}/`} class="mr-2">{c.replace('-', ' ')}</a>)} · Targets: {d.targets.filter((t) => t !== 'everyone').map((t) => <a href={`/scams/targeting/${t}/`} class="mr-2">{t.replace('-', ' ')}</a>)}</p>
+      </section>
+
+      <Faq items={faq} />
+    </div>
+    <RelatedPages items={relatedItems} />
+  </article>
+</BaseLayout>

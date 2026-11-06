@@ -1,0 +1,102 @@
+---
+/**
+ * Hub template: one-paragraph definition, "start here" (the five most useful pages),
+ * latest entries, the full index, facet links. CollectionPage + ItemList schema.
+ */
+import BaseLayout from './BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { collectionPage } from '@/lib/schema';
+
+interface Item { title: string; href: string; blurb?: string; eyebrow?: string; date?: Date }
+interface Props {
+  title: string;
+  description: string; // the definition paragraph, also the meta description
+  eyebrow?: string;
+  crumbs?: { name: string; href: string }[];
+  startHere?: Item[];
+  latest?: Item[];
+  index?: { heading: string; items: Item[] }[];
+  facets?: { heading: string; links: { label: string; href: string }[] }[];
+  signupSource?: string;
+}
+const { title, description, eyebrow, crumbs = [], startHere = [], latest = [], index = [], facets = [], signupSource = 'hub' } = Astro.props;
+const all = [...startHere, ...index.flatMap((g) => g.items)];
+const schema = [collectionPage({ url: Astro.url.pathname, title, description, items: all.map((i) => ({ name: i.title, href: i.href })) })];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={schema}>
+  <div class="container-site py-8 md:py-12">
+    <header class="max-w-3xl">
+      {eyebrow && <p class="eyebrow mb-2">{eyebrow}</p>}
+      <h1 class="uppercase">{title}</h1>
+      <p class="text-lg md:text-xl text-muted mt-4">{description}</p>
+    </header>
+
+    <slot name="intro" />
+
+    {startHere.length > 0 && (
+      <section class="mt-10" aria-labelledby="start-here">
+        <h2 id="start-here" class="mt-0">Start here</h2>
+        <ol class="grid gap-3 md:grid-cols-2 lg:grid-cols-3 list-none pl-0">
+          {startHere.map((it, i) => (
+            <li class="card flex gap-4">
+              <span class="font-display font-black text-3xl text-orange leading-none">{i + 1}</span>
+              <div>
+                {it.eyebrow && <p class="eyebrow mb-1">{it.eyebrow}</p>}
+                <a href={it.href} class="font-display font-bold text-lg leading-tight no-underline hover:underline">{it.title}</a>
+                {it.blurb && <p class="text-sm text-muted mt-1">{it.blurb}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    <SignupForm source={signupSource} heading="Get this in your inbox" sub="Five minutes every weekday. The scams going around, the fix, and one thing to do." />
+
+    {latest.length > 0 && (
+      <section class="mt-10" aria-labelledby="latest">
+        <h2 id="latest" class="mt-0">Latest</h2>
+        <ul class="divide-y divide-line border-y border-line list-none pl-0">
+          {latest.map((it) => (
+            <li class="py-3 flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
+              {it.date && <time class="text-xs font-display font-bold uppercase tracking-widest text-muted w-28 shrink-0" datetime={it.date.toISOString()}>{it.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time>}
+              <div>
+                <a href={it.href} class="font-semibold text-ink">{it.title}</a>
+                {it.blurb && <p class="text-sm text-muted">{it.blurb}</p>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <slot />
+
+    {index.map((group) => (
+      <section class="mt-10" aria-label={group.heading}>
+        <h2 class="mt-0">{group.heading}</h2>
+        <ul class="grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-3 list-none pl-0">
+          {group.items.map((it) => (
+            <li class="py-1 border-b border-line/70">
+              <a href={it.href} class="text-ink font-medium">{it.title}</a>
+              {it.blurb && <span class="block text-sm text-muted">{it.blurb}</span>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    {facets.length > 0 && (
+      <section class="mt-10 grid gap-6 md:grid-cols-2" aria-label="Browse by">
+        {facets.map((f) => (
+          <div class="card">
+            <p class="eyebrow mb-2">{f.heading}</p>
+            <ul class="flex flex-wrap gap-2 list-none pl-0">
+              {f.links.map((l) => <li><a href={l.href} class="inline-block bg-cream rounded-full px-3 py-1 text-sm font-semibold text-ink no-underline hover:bg-yellow">{l.label}</a></li>)}
+            </ul>
+          </div>
+        ))}
+      </section>
+    )}
+  </div>
+</BaseLayout>

@@ -1,0 +1,9 @@
+---
+import PillarGuide from '@/layouts/PillarGuide.astro';
+import { hubGuides } from '@/data/hub-guides';
+export function getStaticPaths() {
+  return hubGuides.filter((g) => g.hub === 'tech').map((g) => ({ params: { slug: g.slug }, props: { guide: g } }));
+}
+const { guide } = Astro.props;
+---
+<PillarGuide guide={guide} />

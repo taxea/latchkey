@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+import TaxSolveCta from '@/components/TaxSolveCta.astro';
+const notices = (await getCollection('notices')).sort((a, b) => a.data.notice.localeCompare(b.data.notice));
+const pages = [
+  { title: 'IRS notices and letters, decoded', href: '/taxes/irs-notices/', blurb: 'Every notice number, what it means, the deadline on it, and what to do this week.' },
+  { title: 'Unfiled tax returns: what actually happens', href: '/taxes/unfiled-returns/', blurb: 'One year, three years, ten years. The penalties, the substitute returns, and the way back.' },
+  { title: 'IRS payment plans', href: '/taxes/payment-plans/', blurb: 'Installment agreements, who qualifies, and what they cost.' },
+  { title: 'Currently Not Collectible status', href: '/taxes/currently-not-collectible/', blurb: 'When the IRS agrees you cannot pay right now.' },
+  { title: 'Offer in Compromise', href: '/taxes/offer-in-compromise/', blurb: 'Settling for less than you owe: who really qualifies, and why most ads lie.' },
+  { title: 'Tax scams', href: '/taxes/tax-scams/', blurb: 'The IRS does not call, text or email first. How the impersonators work.' },
+];
+---
+<HubLayout
+  title="Taxes"
+  eyebrow="Pillar 3"
+  description="IRS letters decoded by notice number, what happens when you have unfiled years, payment plans, Currently Not Collectible status and Offers in Compromise explained without the sales pitch. Written by people who do this for a living, with the ownership disclosed on every page."
+  crumbs={[{ name: 'Taxes', href: '/taxes/' }]}
+  startHere={pages.slice(0, 3).map((p) => ({ ...p, eyebrow: 'Start here' }))}
+  index={[
+    { heading: 'Guides', items: pages },
+    { heading: 'IRS notices, by number', items: notices.map((n) => ({ title: `${n.data.notice}: ${n.data.title.replace(/^IRS (Notice|Letter) \w+: /, '')}`, href: `/taxes/irs-notices/${n.id}/`, blurb: n.data.meaning })) },
+  ]}
+  signupSource="taxes-hub"
+>
+  <TaxSolveCta />
+</HubLayout>

@@ -1,0 +1,31 @@
+---
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+---
+<ArticleLayout
+  title="How we test and pick"
+  description="How Latchkey Daily chooses what it recommends: we set each tool up for a real family member, score it on the things that matter to a Gen X household, pick before we know what pays, and re-test every six months."
+  eyebrow="Recommends"
+  crumbs={[{ name: 'Recommends', href: '/recommends/' }, { name: 'How we test', href: '/recommends/how-we-test/' }]}
+  answer="We set every tool up the way a reader would: on our own phones and, where it applies, on a parent's. We score on five things, pick before we look at affiliate terms, and say on every page which links pay us."
+  keyFacts={[
+    'Every pick is set up on a real device by a real person on the team, including a parent\'s device where the category calls for it.',
+    'Five criteria: does it work for a non-technical person, does it work for a parent you set it up for, what happens when you are locked out, what does it cost over three years, and what does the company do with your data.',
+    'We decide the pick first and apply to affiliate programs second. A product that pays nothing can still be the pick, and has been.',
+    'Re-tested every six months or when the product changes materially; the verified date is on every page.',
+  ]}
+  published="2027-02-01"
+  updated="2027-02-01"
+  isArticle={false}
+  related={[{ title: 'Affiliate disclosure', href: '/recommends/disclosure/' }, { title: 'Editorial policy', href: '/about/editorial-policy/' }]}
+  signupSource="how-we-test"
+>
+  <h2>What we will not do</h2>
+  <ul>
+    <li>Accept payment for a placement or a rating</li>
+    <li>Recommend a product we have not set up ourselves</li>
+    <li>Let a sponsor see a review before it publishes</li>
+    <li>Hide a commission. Every page with a paid link says so at the top</li>
+  </ul>
+  <h2>If we get it wrong</h2>
+  <p>Tell us at <a href="/about/contact/">the contact page</a>. Reader reports that a tool has changed trigger a re-test, and corrections are logged on the <a href="/about/corrections/">corrections page</a>.</p>
+</ArticleLayout>

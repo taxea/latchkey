@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SITE } from '@/lib/site';
+---
+<BaseLayout title="You're in" description="Thanks for subscribing to Latchkey Daily. Check your inbox to confirm, then share your referral link." noindex hideCrumbs>
+  <div class="container-site py-14 md:py-24 max-w-2xl">
+    <p class="tag mb-5"><span>You're in</span></p>
+    <h1 class="uppercase">Check your inbox.</h1>
+    <p class="text-lg mt-4">We sent a confirmation. Click it and the first issue arrives tomorrow morning. If it is not there in a minute, check spam and drag us into your inbox; that teaches your mail app we're welcome.</p>
+    <h2>While you're here</h2>
+    <ol>
+      <li><a href="/protect/gmail/">Lock down your email in ten minutes.</a> It is the master key to everything else.</li>
+      <li><a href="/protect/parents/">Set up a parent's phone in one afternoon.</a></li>
+      <li><a href="/newsletter/sample/">Read today's issue now.</a></li>
+    </ol>
+    <div class="bg-cream rounded-brand p-6 mt-8">
+      <p class="eyebrow mb-2">Know someone who'd want this?</p>
+      <p>Forward the confirmation email, or send them <a href="/subscribe/">{SITE.domain}/subscribe</a>. Three referrals earns the Deadbolt checklist PDF; ten earns the Family Setup Kit. <a href="/refer/">How referrals work.</a></p>
+    </div>
+  </div>
+</BaseLayout>

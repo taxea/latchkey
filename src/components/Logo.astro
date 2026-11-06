@@ -1,0 +1,29 @@
+---
+/**
+ * The Latchkey Daily mark: the slanted orange L with the key ring.
+ * `variant`: "full" (mark + wordmark), "mark" (L only), "inverse" (white wordmark on dark/orange).
+ */
+interface Props {
+  variant?: 'full' | 'mark' | 'inverse';
+  class?: string;
+  height?: number;
+}
+const { variant = 'full', class: className = '', height = 36 } = Astro.props;
+const markColor = variant === 'inverse' ? '#ffffff' : '#ff5a00';
+const textColor = variant === 'inverse' ? '#ffffff' : '#111111';
+---
+<span class={`inline-flex items-center gap-2 ${className}`} aria-label="Latchkey Daily">
+  <svg viewBox="0 0 120 120" height={height} width={height} aria-hidden="true" focusable="false">
+    <g transform="skewX(-12) translate(22 0)">
+      <rect x="18" y="8" width="26" height="100" fill={markColor} />
+      <rect x="18" y="82" width="52" height="26" fill={markColor} />
+    </g>
+    <circle cx="94" cy="88" r="15" fill="none" stroke={markColor} stroke-width="11" />
+  </svg>
+  {variant !== 'mark' && (
+    <span class="font-display font-black uppercase leading-[0.9] tracking-tight" style={`color:${textColor}; font-size:${height * 0.5}px`}>
+      <span class="block">Latchkey</span>
+      <span class="block">Daily</span>
+    </span>
+  )}
+</span>

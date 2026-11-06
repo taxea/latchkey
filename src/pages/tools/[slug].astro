@@ -1,0 +1,19 @@
+---
+import { comingSoonTools as tools } from '@/data/coming-soon-tools';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+export function getStaticPaths() {
+  return Object.keys(tools).map((slug) => ({ params: { slug } }));
+}
+const slug = Astro.params.slug as keyof typeof tools;
+const t = tools[slug];
+---
+<BaseLayout title={`${t.title} (coming soon)`} description={t.blurb} crumbs={[{ name: 'Tools', href: '/tools/' }, { name: t.title, href: `/tools/${slug}/` }]} noindex>
+  <div class="container-site py-12 md:py-20 max-w-2xl">
+    <p class="eyebrow mb-2">Coming soon</p>
+    <h1>{t.title}</h1>
+    <p class="text-lg text-muted mt-3">{t.blurb}</p>
+    <SignupForm source={`tool-${slug}`} heading="Be first to use it" sub="Subscribers get every new tool the day it launches." />
+    <p>In the meantime: <a href="/tools/is-this-a-scam/">Is this a scam?</a> is live, and the <a href="/protect/">lockdown guides</a> cover most of what this tool will check.</p>
+  </div>
+</BaseLayout>

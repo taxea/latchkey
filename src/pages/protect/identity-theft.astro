@@ -1,0 +1,46 @@
+---
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { howTo } from '@/lib/schema';
+const steps = [
+  { name: 'Freeze your credit at Equifax', text: 'Create an account at equifax.com and choose "freeze." It is free, takes ten minutes, and you can lift it temporarily any time you apply for credit.' },
+  { name: 'Freeze your credit at Experian', text: 'Same process at experian.com. Save the PIN or login in your password manager.' },
+  { name: 'Freeze your credit at TransUnion', text: 'Same process at transunion.com. All three must be frozen; a lender can pull from any one.' },
+  { name: 'Set up an IRS Identity Protection PIN', text: 'At irs.gov, get an IP PIN. It stops anyone filing a tax return in your name, which is how refund fraud works.' },
+  { name: 'Create your my Social Security account', text: 'At ssa.gov, claim your account before someone else does. Review your earnings record once a year.' },
+  { name: 'Turn on transaction alerts on every card and bank account', text: 'A text for every charge over a small amount. It is the fastest way to catch a stolen card.' },
+];
+---
+<ArticleLayout
+  title="Freeze your credit and stop identity theft in 30 minutes"
+  description="How to freeze your credit at all three bureaus for free, get an IRS Identity Protection PIN, claim your Social Security account and turn on the alerts that catch fraud early. Six steps, about thirty minutes, done once."
+  eyebrow="Identity"
+  crumbs={[{ name: 'Protect', href: '/protect/' }, { name: 'Identity theft', href: '/protect/identity-theft/' }]}
+  answer="A credit freeze is the single most effective identity-theft protection available and it is free: it stops anyone opening a new account in your name. Freeze all three bureaus, then add the IRS PIN and the Social Security account so the two government identities are claimed by you, not a stranger."
+  keyFacts={[
+    'A credit freeze is free at all three bureaus and does not affect your credit score.',
+    'You can lift it temporarily online in minutes when you apply for credit.',
+    'An IRS Identity Protection PIN stops fraudulent tax returns in your name.',
+    'Paid identity-protection services monitor; a freeze prevents. Do the freeze first.',
+  ]}
+  faq={[
+    { q: 'Does a credit freeze hurt my credit score?', a: 'No. A freeze has no effect on your score and does not stop you using existing cards and accounts.' },
+    { q: 'What about a credit lock?', a: 'A lock is the bureau\'s paid, app-based version of a freeze. The freeze is the legal right and it is free. Use the freeze.' },
+    { q: 'Should my parents freeze their credit?', a: 'Yes, especially if they are not applying for new credit. It is the one step that makes most identity theft against older adults impossible.' },
+  ]}
+  published="2027-01-22"
+  updated="2027-01-22"
+  schema={[howTo({ url: '/protect/identity-theft/', name: 'Freeze your credit and stop identity theft', description: 'Six steps, thirty minutes.', totalTime: 'PT30M', steps, updated: '2027-01-22' })]}
+  related={[
+    { title: 'The Family Setup Kit', href: '/protect/parents/', eyebrow: 'For a parent' },
+    { title: 'Identity protection services compared', href: '/recommends/identity-protection/', eyebrow: 'Recommends' },
+    { title: 'You got scammed. What to do in the next hour.', href: '/scams/recovery/', eyebrow: 'Recovery' },
+  ]}
+  signupSource="identity"
+>
+  <h2>Step by step</h2>
+  <ol class="space-y-4">
+    {steps.map((s, i) => <li id={`step-${i + 1}`}><strong class="font-display">{s.name}.</strong> {s.text}</li>)}
+  </ol>
+  <h2>When you need to lift the freeze</h2>
+  <p>Applying for a card, a car loan or a mortgage? Ask the lender which bureau they pull from, log in to that bureau and lift the freeze for a set number of days. It takes effect within minutes. Then it re-freezes on its own.</p>
+</ArticleLayout>

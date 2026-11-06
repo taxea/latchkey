@@ -1,0 +1,47 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Byline from '@/components/Byline.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { article } from '@/lib/schema';
+import { formatDate } from '@/lib/site';
+
+export async function getStaticPaths() {
+  const issues = await getCollection('issues');
+  return issues.map((i) => ({ params: { slug: i.id }, props: { issue: i } }));
+}
+const { issue } = Astro.props;
+const { Content } = await render(issue);
+const d = issue.data;
+const url = `/newsletter/issues/${issue.id}/`;
+const all = (await getCollection('issues')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const idx = all.findIndex((i) => i.id === issue.id);
+const newer = all[idx - 1];
+const older = all[idx + 1];
+const schema = [article({ url, title: d.title, description: d.preview, published: d.date, updated: d.date, authorSlug: d.author, news: true })];
+---
+<BaseLayout title={d.title} description={d.preview} crumbs={[{ name: 'Newsletter', href: '/newsletter/' }, { name: 'Archive', href: '/newsletter/archive/' }, { name: formatDate(d.date), href: url }]} schema={schema} published={d.date} updated={d.date} type="article">
+  <article class="container-site py-8 md:py-12">
+    <header class="max-w-3xl">
+      <p class="eyebrow mb-2">Issue · {formatDate(d.date)}</p>
+      <h1>{d.title}</h1>
+      <Byline author={d.author} published={d.date} />
+      <p class="text-lg text-muted">{d.preview}</p>
+      {d.sponsor && <p class="text-xs text-muted mt-2">This issue is sponsored by {d.sponsor}. Sponsors do not see or influence editorial content.</p>}
+    </header>
+    <div class="prose-site">
+      <ol class="grid gap-3 md:grid-cols-3 list-none pl-0 my-6">
+        {d.items.map((it, i) => (
+          <li class="border-l-4 border-orange pl-4"><span class="eyebrow">Item {i + 1}</span><p class="font-semibold my-1">{it.href ? <a href={it.href}>{it.headline}</a> : it.headline}</p></li>
+        ))}
+      </ol>
+      <Content />
+      <p class="bg-yellow/60 rounded-brand px-5 py-4 my-8"><strong class="font-display uppercase mr-2">One action:</strong>{d.action}</p>
+      <SignupForm source={`issue-${issue.id}`} heading="Get the next issue" sub="Free, weekday mornings." />
+    </div>
+    <nav class="flex justify-between gap-4 mt-10 text-sm" aria-label="Issue navigation">
+      <span>{older && <a href={`/newsletter/issues/${older.id}/`}>&larr; {older.data.title}</a>}</span>
+      <span>{newer && <a href={`/newsletter/issues/${newer.id}/`}>{newer.data.title} &rarr;</a>}</span>
+    </nav>
+  </article>
+</BaseLayout>

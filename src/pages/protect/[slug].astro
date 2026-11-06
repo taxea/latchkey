@@ -1,0 +1,85 @@
+---
+/**
+ * Guide (HowTo) template: what is at risk, time needed, the 10-minute checklist, full numbered steps,
+ * "do this for a parent", recovery, verified-on date. HowTo + FAQPage schema with every step named.
+ */
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Byline from '@/components/Byline.astro';
+import KeyFacts from '@/components/KeyFacts.astro';
+import Faq from '@/components/Faq.astro';
+import RelatedPages from '@/components/RelatedPages.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { howTo, faqPage, article } from '@/lib/schema';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map((g) => ({ params: { slug: g.id }, props: { guide: g } }));
+}
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+const d = guide.data;
+const url = `/protect/${guide.id}/`;
+const minutes = Number((d.totalTime.match(/PT(\d+)M/) ?? [])[1] ?? 10);
+const description = `How to lock down ${d.service} in about ${minutes} minutes: ${d.atRisk} The ten-minute checklist, the full steps, how to do it for a parent, and how to recover if you're locked out.`;
+const related = (await Promise.all(d.related.map((id) => getEntry('guides', id)))).filter(Boolean);
+const scams = (await Promise.all(d.scams.map((id) => getEntry('scams', id)))).filter(Boolean);
+const schema = [
+  howTo({ url, name: d.title, description, totalTime: d.totalTime, tools: d.tools, steps: d.steps, updated: d.updated }),
+  article({ url, title: d.title, description, published: d.published, updated: d.updated, authorSlug: 'team', about: [d.service] }),
+  faqPage(d.faq),
+];
+const relatedItems = [
+  ...related.map((r) => ({ title: r!.data.title, href: `/protect/${r!.id}/`, blurb: r!.data.atRisk, eyebrow: 'Guide' })),
+  ...scams.map((s) => ({ title: s!.data.title, href: `/scams/${s!.id}/`, blurb: s!.data.definition, eyebrow: 'The scam this stops' })),
+];
+---
+<BaseLayout title={d.title} description={description} crumbs={[{ name: 'Protect', href: '/protect/' }, { name: d.service, href: url }]} schema={schema} published={d.published} updated={d.updated} type="article">
+  <article class="container-site py-8 md:py-12">
+    <header class="max-w-3xl">
+      <p class="eyebrow mb-2">Lockdown guide · about {minutes} minutes</p>
+      <h1>{d.title}</h1>
+      <Byline author="team" published={d.published} updated={d.updated} verified={d.verified} />
+      <p class="text-lg md:text-xl leading-relaxed"><strong>What's at risk:</strong> {d.atRisk}</p>
+      {d.appVersion && <p class="text-sm text-muted">Verified against {d.appVersion}.</p>}
+    </header>
+
+    <div class="prose-site">
+      <KeyFacts title={`The ${minutes}-minute version`} items={d.checklist} />
+      {d.tools.length > 0 && <p class="text-sm text-muted">You'll need: {d.tools.join(', ')}.</p>}
+
+      <SignupForm source={`guide-${guide.id}`} heading="One account a day" sub="The Deadbolt series runs in the daily brief. Get the next guide tomorrow morning." />
+
+      <section id="steps">
+        <h2>Step by step</h2>
+        <ol class="space-y-4">
+          {d.steps.map((s, i) => (
+            <li id={`step-${i + 1}`}>
+              <strong class="font-display">{s.name}.</strong> {s.text}
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <Content />
+
+      {d.forParent.length > 0 && (
+        <section id="for-a-parent" class="bg-cream rounded-brand p-6 my-8">
+          <h2 class="mt-0">Do this for a parent</h2>
+          <ol>{d.forParent.map((s) => <li>{s}</li>)}</ol>
+          <p class="text-sm text-muted mb-0">The whole set, in one afternoon: <a href="/protect/parents/">the Family Setup Kit</a>.</p>
+        </section>
+      )}
+
+      {d.recovery.length > 0 && (
+        <section id="locked-out">
+          <h2>If you get locked out</h2>
+          <ol>{d.recovery.map((s) => <li>{s}</li>)}</ol>
+        </section>
+      )}
+
+      <Faq items={d.faq} />
+    </div>
+    <RelatedPages items={relatedItems} />
+  </article>
+</BaseLayout>

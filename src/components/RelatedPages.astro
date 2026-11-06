@@ -1,0 +1,19 @@
+---
+/** Three to five editor-chosen related pages at the end of every page. */
+interface Props { title?: string; items: { title: string; href: string; blurb?: string; eyebrow?: string }[] }
+const { title = 'Related', items } = Astro.props;
+---
+{items.length > 0 && (
+  <section class="my-12" aria-label={title}>
+    <h2 class="text-xl md:text-2xl mt-0">{title}</h2>
+    <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 list-none pl-0">
+      {items.slice(0, 5).map((it) => (
+        <li class="card">
+          {it.eyebrow && <p class="eyebrow mb-1">{it.eyebrow}</p>}
+          <a href={it.href} class="font-display font-bold text-lg leading-tight no-underline hover:underline">{it.title}</a>
+          {it.blurb && <p class="text-sm text-muted mt-1">{it.blurb}</p>}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

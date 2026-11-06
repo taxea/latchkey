@@ -1,0 +1,11 @@
+---
+/** The disclosed TaxSolve consult link. Appears on tax pages only, from the template, never hand-added. */
+import { SITE } from '@/lib/site';
+---
+<aside class="my-10 rounded-brand border-2 border-ink p-6 bg-white" aria-label="Get help with your taxes">
+  <p class="eyebrow mb-2">If you want someone to handle it</p>
+  <p class="font-display font-black text-2xl leading-tight mb-2">Talk to an Enrolled Agent about your IRS situation, free.</p>
+  <p class="text-muted mb-4">A 15-minute call to find out what you actually owe and what your options are. No pressure, no obligation.</p>
+  <a href={SITE.taxsolveConsultUrl} class="btn btn-dark" rel="sponsored">Book a free consult at TaxSolve</a>
+  <p class="text-xs text-muted mt-4">Disclosure: {SITE.ownership} <a href="/about/ownership/">Read our ownership policy.</a></p>
+</aside>

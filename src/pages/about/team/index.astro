@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { person } from '@/lib/schema';
+const team = await getCollection('team');
+const description = 'The people who write, produce and check Latchkey Daily.';
+const schema = team.map((p) => person({ name: p.data.name, slug: p.id, role: p.data.role, bio: p.data.bio, knowsAbout: p.data.knowsAbout, sameAs: p.data.sameAs, image: p.data.image }));
+---
+<BaseLayout title="The team" description={description} crumbs={[{ name: 'About', href: '/about/' }, { name: 'Team', href: '/about/team/' }]} schema={schema}>
+  <div class="container-site py-8 md:py-12">
+    <p class="eyebrow mb-2">About</p>
+    <h1 class="uppercase">The team</h1>
+    <p class="text-lg text-muted mt-3">{description}</p>
+    <ul class="grid gap-4 md:grid-cols-2 list-none pl-0 mt-8">
+      {team.map((p) => (
+        <li class="card">
+          <a href={`/about/team/${p.id}/`} class="font-display font-black text-2xl text-ink no-underline hover:underline">{p.data.name}</a>
+          <p class="eyebrow mt-1">{p.data.role}</p>
+          <p class="text-muted mt-2">{p.data.bio}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

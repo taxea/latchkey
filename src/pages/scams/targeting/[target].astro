@@ -1,0 +1,29 @@
+---
+import { scamTargets as targets } from '@/data/scam-targets';
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+
+
+export async function getStaticPaths() {
+  return Object.keys(targets).map((target) => ({ params: { target } }));
+}
+const target = Astro.params.target as keyof typeof targets;
+const meta = targets[target];
+const scams = (await getCollection('scams', (s) => s.data.targets.includes(target) || s.data.targets.includes('everyone'))).sort((a, b) => b.data.readerReports - a.data.readerReports);
+---
+<HubLayout
+  title={meta.label}
+  eyebrow="Scams by who they target"
+  description={meta.blurb}
+  crumbs={[{ name: 'Scams', href: '/scams/' }, { name: meta.label, href: `/scams/targeting/${target}/` }]}
+  index={[{ heading: `${scams.length} scams to know`, items: scams.map((s) => ({ title: s.data.title, href: `/scams/${s.id}/`, blurb: s.data.definition })) }]}
+  facets={[{ heading: 'Other targets', links: Object.entries(targets).filter(([k]) => k !== target).map(([k, v]) => ({ label: v.label.replace('Scams that target ', ''), href: `/scams/targeting/${k}/` })) }]}
+  signupSource="scams-target"
+>
+  {target === 'parents' && (
+    <div class="mt-8 card border-orange">
+      <p class="eyebrow mb-1">Do this first</p>
+      <a href="/protect/parents/" class="font-display font-bold text-xl">The Family Setup Kit: set up a parent's phone in one afternoon &rarr;</a>
+    </div>
+  )}
+</HubLayout>

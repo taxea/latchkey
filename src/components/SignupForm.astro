@@ -1,0 +1,37 @@
+---
+/**
+ * The newsletter opt-in. Works without JavaScript: a plain form posting to SITE.signupAction.
+ * Point signupAction at your email platform's form endpoint (Beehiiv/Kit) or a Worker that forwards to it.
+ */
+import { SITE } from '@/lib/site';
+interface Props {
+  variant?: 'hero' | 'inline' | 'footer' | 'compact';
+  heading?: string;
+  sub?: string;
+  source?: string; // where on the site the signup happened, for attribution
+  class?: string;
+}
+const { variant = 'inline', heading, sub, source = 'inline', class: className = '' } = Astro.props;
+const id = `signup-${source}-${Math.random().toString(36).slice(2, 7)}`;
+const isHero = variant === 'hero';
+---
+<div class={`${isHero ? '' : variant === 'footer' ? '' : 'bg-cream rounded-brand p-6 md:p-8 my-8'} ${className}`}>
+  {heading && <p class={`font-display font-black uppercase tracking-tight ${isHero ? 'text-2xl' : 'text-xl'} mb-1`}>{heading}</p>}
+  {sub && <p class={`${variant === 'footer' ? 'text-cream/80' : 'text-muted'} mb-4`}>{sub}</p>}
+  <form action={SITE.signupAction} method={SITE.signupMethod} class="flex flex-col sm:flex-row gap-2" data-signup={source}>
+    <label for={id} class="sr-only">Email address</label>
+    <input
+      id={id}
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      inputmode="email"
+      placeholder="you@example.com"
+      class={`flex-1 rounded-brand border-2 px-4 py-3 text-base ${variant === 'footer' ? 'bg-white border-white text-ink' : 'bg-white border-ink'} focus:outline-none focus:ring-2 focus:ring-orange`}
+    />
+    <input type="hidden" name="source" value={source} />
+    <button type="submit" class="btn btn-primary whitespace-nowrap">{isHero ? 'Get the daily brief' : 'Subscribe free'}</button>
+  </form>
+  <p class={`text-xs mt-2 ${variant === 'footer' ? 'text-cream/70' : 'text-muted'}`}>Free. Weekday mornings. Unsubscribe in one click.</p>
+</div>

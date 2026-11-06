@@ -1,0 +1,23 @@
+---
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { aboutPages } from '@/data/about-pages';
+export function getStaticPaths() {
+  return aboutPages.map((p) => ({ params: { slug: p.slug }, props: { page: p } }));
+}
+const { page } = Astro.props;
+const others = aboutPages.filter((p) => p.slug !== page.slug).slice(0, 4);
+---
+<ArticleLayout
+  title={page.title}
+  description={page.description}
+  eyebrow="About"
+  crumbs={[{ name: 'About', href: '/about/' }, { name: page.title, href: `/about/${page.slug}/` }]}
+  answer={page.answer}
+  keyFacts={page.keyFacts}
+  updated={page.updated}
+  isArticle={false}
+  related={others.map((o) => ({ title: o.title, href: `/about/${o.slug}/`, eyebrow: 'About' }))}
+  signupSource={`about-${page.slug}`}
+>
+  <Fragment set:html={page.html} />
+</ArticleLayout>

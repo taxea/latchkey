@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+
+const scams = (await getCollection('scams')).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const alerts = (await getCollection('alerts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 8);
+const byReports = [...scams].sort((a, b) => b.data.readerReports - a.data.readerReports).slice(0, 5);
+
+const channels = [
+  { label: 'Text message', slug: 'text' }, { label: 'Phone call', slug: 'phone' }, { label: 'Email', slug: 'email' },
+  { label: 'Social media', slug: 'social' }, { label: 'In person', slug: 'in-person' }, { label: 'Mail', slug: 'mail' }, { label: 'Website', slug: 'web' },
+];
+const targets = [
+  { label: 'Aging parents', slug: 'parents' }, { label: 'Teens and young adults', slug: 'teens' }, { label: 'Small business', slug: 'small-business' },
+  { label: 'Homeowners', slug: 'homeowners' }, { label: 'Job seekers', slug: 'job-seekers' }, { label: 'Retirees', slug: 'retirees' },
+];
+---
+<HubLayout
+  title="Scams"
+  eyebrow="The scam database"
+  description="Every scam going around right now, one page each: what the text or call looks like, how it works, the red flags, what to do if you got it and what to do if you already paid. Updated as new variants appear, with the number of Latchkey readers who have reported each one."
+  crumbs={[{ name: 'Scams', href: '/scams/' }]}
+  startHere={byReports.map((s) => ({ title: s.data.title, href: `/scams/${s.id}/`, blurb: s.data.definition, eyebrow: `${s.data.readerReports.toLocaleString()} reader reports` }))}
+  latest={alerts.map((a) => ({ title: a.data.title, href: `/scams/alerts/${a.id}/`, blurb: a.data.summary, date: a.data.date }))}
+  index={[{ heading: 'All scams, A to Z', items: scams.map((s) => ({ title: s.data.title, href: `/scams/${s.id}/`, blurb: s.data.definition })) }]}
+  facets={[
+    { heading: 'By how it reaches you', links: channels.map((c) => ({ label: c.label, href: `/scams/by-channel/${c.slug}/` })) },
+    { heading: 'By who it targets', links: targets.map((t) => ({ label: t.label, href: `/scams/targeting/${t.slug}/` })) },
+  ]}
+  signupSource="scams-hub"
+>
+  <div slot="intro" class="mt-8 grid gap-3 sm:grid-cols-3">
+    <a href="/tools/is-this-a-scam/" class="card no-underline hover:border-orange"><p class="eyebrow mb-1">Got something suspicious?</p><span class="font-display font-bold text-lg">Is this a scam? Check it &rarr;</span></a>
+    <a href="/scams/recovery/" class="card no-underline hover:border-orange"><p class="eyebrow mb-1">Already paid or clicked?</p><span class="font-display font-bold text-lg">What to do right now &rarr;</span></a>
+    <a href="/scams/report/" class="card no-underline hover:border-orange"><p class="eyebrow mb-1">Report it</p><span class="font-display font-bold text-lg">Where to report a scam, by agency &rarr;</span></a>
+  </div>
+</HubLayout>

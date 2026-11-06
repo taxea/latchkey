@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+const recs = await getCollection('recommends');
+const categories = recs.filter((r) => r.data.kind === 'category').sort((a, b) => a.data.title.localeCompare(b.data.title));
+const products = recs.filter((r) => r.data.kind === 'product');
+---
+<HubLayout
+  title="Latchkey Recommends"
+  eyebrow="The tools we'd set up for our own parents"
+  description="The password managers, identity protection, VPNs, estate-planning tools and phones we actually recommend, tested by people who set them up for their own families. We pick first and link second: some links pay us a commission, every page says which, and nobody buys a recommendation."
+  crumbs={[{ name: 'Recommends', href: '/recommends/' }]}
+  startHere={categories.slice(0, 5).map((c) => ({ title: c.data.categoryTitle ?? c.data.title, href: `/recommends/${c.data.category}/`, blurb: c.data.forWhom, eyebrow: c.data.pick ? `Our pick: ${c.data.pick}` : undefined }))}
+  index={[
+    { heading: 'By category', items: categories.map((c) => ({ title: c.data.categoryTitle ?? c.data.title, href: `/recommends/${c.data.category}/`, blurb: c.data.forWhom })) },
+    { heading: 'Reviews', items: products.map((p) => ({ title: p.data.title, href: `/recommends/${p.data.category}/${p.id.split('/').pop()}/`, blurb: p.data.forWhom })) },
+  ]}
+  signupSource="recommends"
+>
+  <p slot="intro" class="mt-4 text-sm text-muted"><a href="/recommends/how-we-test/">How we test</a> · <a href="/recommends/disclosure/">Affiliate disclosure</a></p>
+</HubLayout>

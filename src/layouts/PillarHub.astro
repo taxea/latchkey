@@ -1,0 +1,21 @@
+---
+/** Shared hub page for the Tech, Money, Family and Estate pillars, driven by src/data/hub-guides.ts. */
+import HubLayout from './HubLayout.astro';
+import { hubGuides, HUB_META } from '@/data/hub-guides';
+interface Props { hub: keyof typeof HUB_META; extra?: { title: string; href: string; blurb?: string }[] }
+const { hub, extra = [] } = Astro.props;
+const meta = HUB_META[hub];
+const guides = hubGuides.filter((g) => g.hub === hub);
+const items = [...guides.map((g) => ({ title: g.title, href: `/${hub}/${g.slug}/`, blurb: g.description })), ...extra];
+---
+<HubLayout
+  title={meta.title}
+  eyebrow={meta.eyebrow}
+  description={meta.description}
+  crumbs={[{ name: meta.title, href: `/${hub}/` }]}
+  startHere={items.slice(0, 5).map((i) => ({ ...i, eyebrow: 'Guide' }))}
+  index={items.length > 5 ? [{ heading: 'All guides', items }] : []}
+  signupSource={`${hub}-hub`}
+>
+  <slot />
+</HubLayout>

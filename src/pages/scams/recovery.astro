@@ -1,0 +1,57 @@
+---
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+const faq = [
+  { q: 'Can I get money back after a scam?', a: 'Sometimes. Credit card payments and bank transfers reported within hours have the best odds. Gift cards, wire transfers, crypto and cash are rarely recovered, but report them anyway: it sometimes freezes funds and it builds the case.' },
+  { q: 'Should I be embarrassed?', a: 'No. Scams are built by professionals to beat smart people. Reporting quickly is the only thing that matters now.' },
+  { q: 'Do I need to tell my family?', a: 'If a scammer has your information, they will try your relatives next. Tell them what happened so they are ready.' },
+];
+---
+<ArticleLayout
+  title="You got scammed. Here is what to do in the next hour."
+  description="A step-by-step recovery checklist for the first hour, the first day and the first week after a scam: stop the money, lock the accounts, report it, and protect your family from the follow-up."
+  eyebrow="Recovery"
+  crumbs={[{ name: 'Scams', href: '/scams/' }, { name: 'Recovery', href: '/scams/recovery/' }]}
+  answer="Stop the money first, then lock the accounts, then report it. Speed matters more than anything else: a bank transfer reported in the first hours is often reversible; one reported next week usually is not."
+  keyFacts={[
+    'Call your bank or card issuer now, before anything else, and say the word "fraud."',
+    'Change the password on the account involved and on your email, and turn on two-factor authentication.',
+    'Report to the FTC at reportfraud.ftc.gov and, for any loss over a few hundred dollars, to the FBI at ic3.gov.',
+    'Scammers sell victim lists. Expect follow-up calls offering to "recover" your money. Those are scams too.',
+  ]}
+  faq={faq}
+  published="2027-01-15"
+  updated="2027-01-15"
+  related={[
+    { title: 'Where to report a scam, by agency', href: '/scams/report/', eyebrow: 'Report' },
+    { title: 'Lock down your email', href: '/protect/gmail/', eyebrow: 'Guide' },
+    { title: 'The recovery scam', href: '/scams/recovery-scam/', eyebrow: 'Watch for this next' },
+  ]}
+  signupSource="recovery"
+>
+  <h2>The first hour: stop the money</h2>
+  <ol>
+    <li><strong>Paid by card or bank transfer:</strong> call the number on the back of the card or on your bank's website, not a number from any message. Say "I need to report fraud." Ask them to reverse the transaction and freeze the card.</li>
+    <li><strong>Paid by Zelle, Venmo, Cash App or PayPal:</strong> report it inside the app immediately, then call your bank too. Peer-to-peer payments are hard to reverse but fast reports sometimes succeed.</li>
+    <li><strong>Paid with gift cards:</strong> call the card company (the number is on the back) and report the card numbers as used in a scam. Keep the cards and receipts.</li>
+    <li><strong>Sent a wire:</strong> call your bank and ask for a recall. Then call the receiving bank if you know it.</li>
+    <li><strong>Paid in crypto:</strong> report to the exchange you used and to ic3.gov. Recovery is unlikely, but reports sometimes freeze funds.</li>
+  </ol>
+
+  <h2>The first day: lock the doors</h2>
+  <ol>
+    <li>Change the password on the account the scam touched, then on your email. Your email is the master key to everything else. <a href="/protect/gmail/">Here is the ten-minute Gmail lockdown.</a></li>
+    <li>Turn on two-factor authentication on email, bank and phone carrier accounts.</li>
+    <li>If you gave a Social Security number, driver's license or date of birth: freeze your credit at all three bureaus. It is free and takes ten minutes each. <a href="/protect/identity-theft/">Identity theft guide.</a></li>
+    <li>If someone remote-controlled your computer: disconnect it from the internet, change passwords from a different device, and have it checked before you use it for banking again.</li>
+    <li>If you gave a bank login: call the bank and ask them to reset online access and review recent activity.</li>
+  </ol>
+
+  <h2>The first week: report and watch</h2>
+  <ol>
+    <li>File at <a href="https://reportfraud.ftc.gov" rel="noopener">reportfraud.ftc.gov</a>. It takes five minutes and it is how patterns get tracked.</li>
+    <li>If you lost money, file at <a href="https://www.ic3.gov" rel="noopener">ic3.gov</a> (the FBI's Internet Crime Complaint Center).</li>
+    <li>If identity information was taken, file at <a href="https://www.identitytheft.gov" rel="noopener">identitytheft.gov</a>; it generates a recovery plan and the letters you need.</li>
+    <li>Tell your family. Scammers who got one person's information try their relatives next, and they will use your name.</li>
+    <li>Expect the follow-up: calls or emails from a "recovery service," a "lawyer" or "the FBI" offering to get your money back for a fee. <a href="/scams/recovery-scam/">That is the recovery scam.</a> Nobody legitimate charges you to recover scam losses.</li>
+  </ol>
+</ArticleLayout>

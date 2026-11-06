@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { SITE } from '@/lib/site';
+const team = await getCollection('team');
+---
+<ArticleLayout
+  title="About Latchkey Daily"
+  description={`${SITE.description} Who writes it, how it makes money, and the rules it follows.`}
+  eyebrow="About"
+  crumbs={[{ name: 'About', href: '/about/' }]}
+  answer={SITE.description}
+  keyFacts={[
+    'Free, weekday mornings, five minutes, one action.',
+    'Written by real people. No synthetic hosts, voices or faces, ever.',
+    'Funded by affiliate commissions, sponsorships, an optional membership, and referrals to TaxSolve, which shares an owner with Latchkey Daily.',
+    'Every article shows its author, its date, and its sources. Corrections are published.',
+  ]}
+  published="2027-02-01"
+  updated="2027-02-01"
+  isArticle={false}
+  related={[
+    { title: 'The team', href: '/about/team/' },
+    { title: 'Editorial policy', href: '/about/editorial-policy/' },
+    { title: 'How we use AI', href: '/about/how-we-use-ai/' },
+    { title: 'Ownership', href: '/about/ownership/' },
+    { title: 'Contact', href: '/about/contact/' },
+  ]}
+  signupSource="about"
+>
+  <h2>Why "Latchkey"</h2>
+  <p>Gen X were the latchkey kids: home alone after school, let ourselves in, figured it out. Now we hold the keys for everyone: our parents, our kids, our own accounts in a world built to trick us out of them. Latchkey Daily is the brief for the generation that holds the keys.</p>
+  <h2>What we cover</h2>
+  <p>Scams and how to stop them. Technology made usable, including what AI is actually good for. And the money, family, health and estate questions of the sandwich years. The through-line is the same: in a rapidly changing world, help you protect yourself and the people you look after, and make the new stuff understandable.</p>
+  <h2>Who writes it</h2>
+  <ul>
+    {team.map((p) => <li><a href={`/about/team/${p.id}/`}>{p.data.name}</a>, {p.data.role}</li>)}
+  </ul>
+  <h2>The rules</h2>
+  <ul>
+    <li>No fear without a fix. Every scam story ends with what to do.</li>
+    <li>Sources on every claim; corrections in the next issue and on the <a href="/about/corrections/">corrections page</a>.</li>
+    <li>We pick before we link. <a href="/recommends/disclosure/">How we make money.</a></li>
+    <li>Nothing condescending about age. If it would sound wrong said to a 48-year-old engineer, we cut it.</li>
+    <li>Real people on camera and in the byline. <a href="/about/how-we-use-ai/">Where AI is used, and where it is not.</a></li>
+  </ul>
+</ArticleLayout>

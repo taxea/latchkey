@@ -1,0 +1,51 @@
+---
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+---
+<ArticleLayout
+  title="Where to report a scam, by what happened"
+  description="The right place to report a scam depends on what happened: the FTC for almost everything, the FBI's IC3 for money lost online, the IRS for tax impersonation, your state attorney general, and the platform it came through. One list, with links."
+  eyebrow="Report"
+  crumbs={[{ name: 'Scams', href: '/scams/' }, { name: 'Report', href: '/scams/report/' }]}
+  answer="Report every scam to the FTC at reportfraud.ftc.gov; it is the central database and takes five minutes. If you lost money through the internet, also file with the FBI at ic3.gov. Then report to the specific agency or platform below."
+  keyFacts={[
+    'FTC: reportfraud.ftc.gov, for every kind of scam, whether or not you lost money.',
+    'FBI IC3: ic3.gov, for any loss through the internet, email, text or an app.',
+    'Identity theft: identitytheft.gov, which also builds your recovery plan.',
+    'Report to the platform too (your carrier, Facebook, Amazon, your bank); that is what gets the account shut down.',
+  ]}
+  published="2027-01-15"
+  updated="2027-01-15"
+  related={[
+    { title: 'You got scammed. What to do in the next hour.', href: '/scams/recovery/', eyebrow: 'Recovery' },
+    { title: 'Is this a scam? Check it', href: '/tools/is-this-a-scam/', eyebrow: 'Tool' },
+  ]}
+  isArticle={false}
+  signupSource="report"
+>
+  <h2>By what happened</h2>
+  <table>
+    <thead><tr><th>What happened</th><th>Report to</th><th>Also</th></tr></thead>
+    <tbody>
+      <tr><td>Any scam, any channel</td><td><a href="https://reportfraud.ftc.gov" rel="noopener">FTC: reportfraud.ftc.gov</a></td><td>Your state attorney general's consumer protection office</td></tr>
+      <tr><td>Lost money online, by text, email or app</td><td><a href="https://www.ic3.gov" rel="noopener">FBI IC3: ic3.gov</a></td><td>Your bank or card issuer, immediately</td></tr>
+      <tr><td>Someone used your identity</td><td><a href="https://www.identitytheft.gov" rel="noopener">identitytheft.gov</a></td><td>Freeze credit at Equifax, Experian and TransUnion</td></tr>
+      <tr><td>Someone pretending to be the IRS</td><td><a href="https://www.tigta.gov" rel="noopener">TIGTA (Treasury Inspector General)</a> and phishing@irs.gov</td><td><a href="/taxes/tax-scams/">Tax scams explained</a></td></tr>
+      <tr><td>Someone pretending to be Social Security</td><td><a href="https://oig.ssa.gov" rel="noopener">SSA Office of the Inspector General</a></td><td></td></tr>
+      <tr><td>Someone pretending to be Medicare</td><td>1-800-MEDICARE and <a href="https://oig.hhs.gov" rel="noopener">HHS OIG</a></td><td>Your local Senior Medicare Patrol</td></tr>
+      <tr><td>A scam text</td><td>Forward it to 7726 (SPAM) on any carrier</td><td>Report in the Messages app</td></tr>
+      <tr><td>A scam email</td><td>Report as phishing in Gmail or Outlook</td><td>Forward to reportphishing@apwg.org</td></tr>
+      <tr><td>A fake seller or hacked account on Facebook or Instagram</td><td>Report inside the app</td><td>FTC</td></tr>
+      <tr><td>A fake Amazon message or order</td><td>reportascam@amazon.com</td><td>FTC</td></tr>
+      <tr><td>Investment or crypto fraud</td><td><a href="https://www.sec.gov/tcr" rel="noopener">SEC</a>, <a href="https://www.cftc.gov/complaint" rel="noopener">CFTC</a>, FBI IC3</td><td>Your state securities regulator</td></tr>
+      <tr><td>Elder abuse or financial exploitation</td><td>Adult Protective Services in your state</td><td>The <a href="https://eldercare.acl.gov" rel="noopener">Eldercare Locator</a>, 1-800-677-1116</td></tr>
+    </tbody>
+  </table>
+
+  <h2>What to have ready</h2>
+  <ul>
+    <li>Screenshots of the message, the phone number or email address, and any website</li>
+    <li>Dates, amounts and how you paid</li>
+    <li>Any names, account numbers or reference numbers the scammer used</li>
+  </ul>
+  <p>Reports are not just for recovery. They are how the FTC and FBI see the wave early and how platforms shut accounts down. <a href="/tools/is-this-a-scam/">Report it to us too</a> and we will warn the readers who are next.</p>
+</ArticleLayout>

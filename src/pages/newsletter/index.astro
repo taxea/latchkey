@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { SITE, formatDate } from '@/lib/site';
+const issues = (await getCollection('issues')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latest = issues.slice(0, 5);
+---
+<BaseLayout title="The newsletter" description={SITE.description} crumbs={[{ name: 'Newsletter', href: '/newsletter/' }]}>
+  <div class="container-site py-8 md:py-12">
+    <div class="grid gap-10 md:grid-cols-2 items-start">
+      <div>
+        <p class="eyebrow mb-2">The daily brief</p>
+        <h1 class="uppercase">Five minutes. One action. Every weekday.</h1>
+        <p class="text-lg text-muted mt-4">{SITE.description}</p>
+        <ul class="mt-6 space-y-2">
+          <li><strong>Three items.</strong> The scam going around, the tech worth knowing, the money or family question of the day.</li>
+          <li><strong>One action.</strong> Something you can do in ten minutes, today.</li>
+          <li><strong>Friday: Do This Now.</strong> The week's actions in one checklist.</li>
+        </ul>
+        <SignupForm source="newsletter-page" heading="Get it free" sub="Weekday mornings. Unsubscribe in one click." />
+        <p class="text-sm"><a href="/newsletter/sample/">Read a sample issue</a> · <a href="/newsletter/archive/">Browse the archive</a> · <a href="/refer/">Refer a friend</a></p>
+      </div>
+      <div>
+        <p class="eyebrow mb-3">Recent issues</p>
+        <ul class="divide-y divide-line border-y border-line list-none pl-0">
+          {latest.map((i) => (
+            <li class="py-3">
+              <time class="text-xs font-display font-bold uppercase tracking-widest text-muted" datetime={i.data.date.toISOString()}>{formatDate(i.data.date)}</time>
+              <a href={`/newsletter/issues/${i.id}/`} class="block font-display font-bold text-lg text-ink no-underline hover:underline">{i.data.title}</a>
+              <p class="text-sm text-muted">{i.data.preview}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

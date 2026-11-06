@@ -1,0 +1,54 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Byline from '@/components/Byline.astro';
+import KeyFacts from '@/components/KeyFacts.astro';
+import Faq from '@/components/Faq.astro';
+import RelatedPages from '@/components/RelatedPages.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { product as productSchema, faqPage, article } from '@/lib/schema';
+
+export async function getStaticPaths() {
+  const products = await getCollection('recommends', (r) => r.data.kind === 'product');
+  return products.map((p) => ({ params: { category: p.data.category, product: p.id.split('/').pop() }, props: { item: p } }));
+}
+const { item } = Astro.props;
+const { Content } = await render(item);
+const d = item.data;
+const url = `/recommends/${d.category}/${item.id.split('/').pop()}/`;
+const cat = (await getCollection('recommends', (r) => r.data.kind === 'category' && r.data.category === d.category))[0];
+const siblings = (await getCollection('recommends', (r) => r.data.kind === 'product' && r.data.category === d.category && r.id !== item.id)).slice(0, 4);
+const description = `${d.product} review: ${d.forWhom}${d.price ? ` ${d.price}.` : ''} Pros, cons, and whether it is the right pick for you or a parent.`;
+const schema = [
+  productSchema({ url, name: d.product ?? d.title, brand: d.brand, description, price: d.price, rating: d.rating, pros: d.pros, cons: d.cons, updated: d.updated, authorSlug: 'team' }),
+  article({ url, title: d.title, description, published: d.published, updated: d.updated, authorSlug: 'team', about: [d.product ?? d.title] }),
+  faqPage(d.faq),
+];
+const catTitle = cat?.data.categoryTitle ?? cat?.data.title ?? d.category;
+---
+<BaseLayout title={d.title} description={description} crumbs={[{ name: 'Recommends', href: '/recommends/' }, { name: catTitle, href: `/recommends/${d.category}/` }, { name: d.product ?? d.title, href: url }]} schema={schema} published={d.published} updated={d.updated} type="article">
+  <article class="container-site py-8 md:py-12">
+    <header class="max-w-3xl">
+      <p class="eyebrow mb-2">Review · {catTitle}</p>
+      <h1>{d.title}</h1>
+      <Byline author="team" published={d.published} updated={d.updated} verified={d.tested} />
+      <p class="text-lg md:text-xl leading-relaxed"><strong>Who it's for:</strong> {d.forWhom}</p>
+      <div class="flex flex-wrap items-center gap-4 mt-4">
+        {d.rating && <span class="font-display font-black text-2xl text-orange" aria-label={`${d.rating} out of 5`}>{d.rating}/5</span>}
+        {d.price && <span class="text-muted">{d.price}</span>}
+        {d.url && <a href={d.url} rel="sponsored noopener" class="btn btn-primary">Get {d.product}</a>}
+      </div>
+    </header>
+    <div class="prose-site">
+      <div class="grid gap-4 md:grid-cols-2 my-6">
+        <KeyFacts title="Pros" items={d.pros} />
+        <KeyFacts title="Cons" items={d.cons} />
+      </div>
+      <p class="text-xs text-muted">Affiliate link above; it may pay us a commission at no cost to you. We tested before we linked. <a href="/recommends/disclosure/">Disclosure.</a></p>
+      <SignupForm source={`rec-${item.id.replace('/', '-')}`} heading="One tool a week, tested" sub="In the daily brief." />
+      <Content />
+      <Faq items={d.faq} />
+    </div>
+    <RelatedPages title="Alternatives" items={siblings.map((s) => ({ title: s.data.title, href: `/recommends/${d.category}/${s.id.split('/').pop()}/`, blurb: s.data.forWhom, eyebrow: 'Review' }))} />
+  </article>
+</BaseLayout>

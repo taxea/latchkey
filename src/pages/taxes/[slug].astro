@@ -1,0 +1,35 @@
+---
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import TaxSolveCta from '@/components/TaxSolveCta.astro';
+import { taxGuides } from '@/data/tax-guides';
+
+export function getStaticPaths() {
+  return taxGuides.map((g) => ({ params: { slug: g.slug }, props: { guide: g } }));
+}
+const { guide } = Astro.props;
+const others = taxGuides.filter((g) => g.slug !== guide.slug).slice(0, 3);
+---
+<ArticleLayout
+  title={guide.title}
+  description={guide.description}
+  eyebrow="Taxes"
+  crumbs={[{ name: 'Taxes', href: '/taxes/' }, { name: guide.title, href: `/taxes/${guide.slug}/` }]}
+  answer={guide.answer}
+  keyFacts={guide.keyFacts}
+  faq={guide.faq}
+  published={guide.published}
+  updated={guide.updated}
+  related={[
+    ...others.map((o) => ({ title: o.title, href: `/taxes/${o.slug}/`, eyebrow: 'Taxes' })),
+    { title: 'IRS notices, decoded by number', href: '/taxes/irs-notices/', eyebrow: 'Look up your letter' },
+  ]}
+  signupSource={`taxes-${guide.slug}`}
+>
+  {guide.sections.map((s) => (
+    <section>
+      <h2>{s.heading}</h2>
+      <Fragment set:html={s.html} />
+    </section>
+  ))}
+  <TaxSolveCta slot="after-faq" />
+</ArticleLayout>

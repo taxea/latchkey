@@ -1,0 +1,63 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Byline from '@/components/Byline.astro';
+import KeyFacts from '@/components/KeyFacts.astro';
+import Faq from '@/components/Faq.astro';
+import RelatedPages from '@/components/RelatedPages.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { article, faqPage, itemList } from '@/lib/schema';
+
+export async function getStaticPaths() {
+  const cats = await getCollection('recommends', (r) => r.data.kind === 'category');
+  return cats.map((c) => ({ params: { category: c.data.category }, props: { cat: c } }));
+}
+const { cat } = Astro.props;
+const { Content } = await render(cat);
+const d = cat.data;
+const url = `/recommends/${d.category}/`;
+const products = (await getCollection('recommends', (r) => r.data.kind === 'product' && r.data.category === d.category)).sort((a, b) => (b.data.rating ?? 0) - (a.data.rating ?? 0));
+const title = d.categoryTitle ?? d.title;
+const description = `${d.forWhom} Our pick${d.pick ? `: ${d.pick}` : ''}${d.runnerUp ? `, runner-up ${d.runnerUp}` : ''}. Tested, with the trade-offs and what to skip.`;
+const schema = [
+  article({ url, title: d.title, description, published: d.published, updated: d.updated, authorSlug: 'team' }),
+  itemList({ name: title, items: products.map((p) => ({ name: p.data.product ?? p.data.title, href: `/recommends/${d.category}/${p.id.split('/').pop()}/` })) }),
+  faqPage(d.faq),
+];
+---
+<BaseLayout title={d.title} description={description} crumbs={[{ name: 'Recommends', href: '/recommends/' }, { name: title, href: url }]} schema={schema} published={d.published} updated={d.updated} type="article">
+  <article class="container-site py-8 md:py-12">
+    <header class="max-w-3xl">
+      <p class="eyebrow mb-2">Latchkey Recommends · {title}</p>
+      <h1>{d.title}</h1>
+      <Byline author="team" published={d.published} updated={d.updated} verified={d.tested} />
+      <p class="text-lg md:text-xl leading-relaxed"><strong>Who this is for:</strong> {d.forWhom}</p>
+    </header>
+    <div class="prose-site">
+      <KeyFacts title="The short version" items={[...(d.pick ? [`Our pick: ${d.pick}`] : []), ...(d.runnerUp ? [`Runner-up: ${d.runnerUp}`] : []), ...(d.skip ? [`Skip: ${d.skip}`] : [])]} />
+      <p class="text-xs text-muted">Some links on this page are affiliate links and may pay us a commission at no cost to you. We chose these before we knew which ones pay. <a href="/recommends/disclosure/">How that works.</a></p>
+      {products.length > 0 && (
+        <section>
+          <h2>The picks</h2>
+          <ul class="list-none pl-0 grid gap-4">
+            {products.map((p) => (
+              <li class="card">
+                <div class="flex items-baseline justify-between gap-3 flex-wrap">
+                  <a href={`/recommends/${d.category}/${p.id.split('/').pop()}/`} class="font-display font-bold text-xl">{p.data.product ?? p.data.title}</a>
+                  {p.data.price && <span class="text-sm text-muted">{p.data.price}</span>}
+                </div>
+                <p class="text-muted my-2">{p.data.forWhom}</p>
+                {p.data.url && <a href={p.data.url} rel="sponsored noopener" class="btn btn-outline text-sm py-2">Get {p.data.product ?? 'it'}</a>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      <SignupForm source={`rec-${d.category}`} heading="Tools, tested, every week" sub="We review one tool a week in the daily brief." />
+      <Content />
+      <Faq items={d.faq} />
+      <p class="text-sm text-muted"><a href="/recommends/how-we-test/">How we test</a></p>
+    </div>
+    <RelatedPages items={products.map((p) => ({ title: p.data.title, href: `/recommends/${d.category}/${p.id.split('/').pop()}/`, blurb: p.data.forWhom, eyebrow: 'Review' }))} title="Reviews in this category" />
+  </article>
+</BaseLayout>

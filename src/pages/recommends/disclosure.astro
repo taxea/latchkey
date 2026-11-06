@@ -1,0 +1,26 @@
+---
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { SITE } from '@/lib/site';
+---
+<ArticleLayout
+  title="Affiliate and advertising disclosure"
+  description="How Latchkey Daily makes money: affiliate commissions on some recommended products, newsletter and video sponsorships, membership, and referrals to TaxSolve, which shares an owner with Latchkey Daily. What that does and does not affect."
+  eyebrow="Disclosure"
+  crumbs={[{ name: 'Recommends', href: '/recommends/' }, { name: 'Disclosure', href: '/recommends/disclosure/' }]}
+  answer="Some links on this site are affiliate links: if you buy through them, we may earn a commission at no extra cost to you. We choose what to recommend before we know what pays. Sponsors are labeled and never see editorial content in advance. Tax pages link to TaxSolve, which shares an owner with Latchkey Daily, and say so on every page."
+  keyFacts={[
+    'Affiliate links are marked rel="sponsored" and disclosed at the top of every page that has one.',
+    'Sponsored sends and videos are labeled as sponsored. Sponsors do not influence what we cover or recommend.',
+    SITE.ownership,
+    'We do not sell or share subscriber email addresses with anyone, including TaxSolve.',
+  ]}
+  published="2027-02-01"
+  updated="2027-02-01"
+  isArticle={false}
+  related={[{ title: 'How we test', href: '/recommends/how-we-test/' }, { title: 'Ownership', href: '/about/ownership/' }, { title: 'Editorial policy', href: '/about/editorial-policy/' }]}
+  signupSource="disclosure"
+>
+  <h2>In plain terms</h2>
+  <p>Running a daily publication with real testing costs money. We cover it four ways: commissions when readers buy a product we recommended, sponsorships in the newsletter and on video, an optional paid membership, and referrals of readers with IRS problems to TaxSolve. None of those change what we write; if we ever think one has, we will say so here.</p>
+  <p>This disclosure is made in accordance with the FTC's guidelines on endorsements and testimonials.</p>
+</ArticleLayout>

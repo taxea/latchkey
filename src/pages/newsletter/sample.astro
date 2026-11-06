@@ -1,0 +1,26 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { formatDate } from '@/lib/site';
+const issues = (await getCollection('issues')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const issue = issues[0];
+const { Content } = await render(issue);
+---
+<BaseLayout title="A sample issue" description="What a Latchkey Daily issue looks like: three items, one action, five minutes." crumbs={[{ name: 'Newsletter', href: '/newsletter/' }, { name: 'Sample issue', href: '/newsletter/sample/' }]} noindex>
+  <div class="container-site py-8 md:py-12">
+    <p class="eyebrow mb-2">A sample issue · this is the most recent one, from {formatDate(issue.data.date)}</p>
+    <h1>{issue.data.title}</h1>
+    <p class="text-muted mt-2">Subject line: <em>{issue.data.subject}</em></p>
+    <div class="prose-site mt-6 bg-white border border-line rounded-brand p-6 md:p-8">
+      <ol class="grid gap-3 md:grid-cols-3 list-none pl-0 mt-0">
+        {issue.data.items.map((it, i) => (
+          <li class="border-l-4 border-orange pl-4"><span class="eyebrow">Item {i + 1}</span><p class="font-semibold my-1">{it.headline}</p></li>
+        ))}
+      </ol>
+      <Content />
+      <p class="bg-yellow/60 rounded-brand px-5 py-4 my-6"><strong class="font-display uppercase mr-2">One action:</strong>{issue.data.action}</p>
+    </div>
+    <SignupForm source="sample" heading="Want this tomorrow morning?" sub="Free. Weekday mornings. Unsubscribe in one click." />
+  </div>
+</BaseLayout>

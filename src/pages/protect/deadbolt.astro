@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+const guides = (await getCollection('guides')).sort((a, b) => a.data.published.valueOf() - b.data.published.valueOf());
+---
+<HubLayout
+  title="The 10-Minute Deadbolt"
+  eyebrow="The series"
+  description="One account a day, ten minutes each. The Deadbolt series walks through the lockdown of every account that matters, in the order that matters: email first, because it is the master key, then phone, bank, payment apps and social. Each day's guide runs in the newsletter and lives here."
+  crumbs={[{ name: 'Protect', href: '/protect/' }, { name: 'The 10-Minute Deadbolt', href: '/protect/deadbolt/' }]}
+  index={[{ heading: 'In order', items: guides.map((g, i) => ({ title: `Day ${i + 1}: ${g.data.title}`, href: `/protect/${g.id}/`, blurb: g.data.atRisk })) }]}
+  signupSource="deadbolt"
+/>

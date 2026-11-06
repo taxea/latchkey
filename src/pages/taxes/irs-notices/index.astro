@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+import TaxSolveCta from '@/components/TaxSolveCta.astro';
+const notices = (await getCollection('notices')).sort((a, b) => a.data.notice.localeCompare(b.data.notice));
+---
+<HubLayout
+  title="IRS notices and letters, decoded"
+  eyebrow="By notice number"
+  description="Look up the number in the top right corner of your IRS letter. Each page says what the notice means, why you got it, the deadline printed on it, what happens if you ignore it, and what to do this week."
+  crumbs={[{ name: 'Taxes', href: '/taxes/' }, { name: 'IRS notices', href: '/taxes/irs-notices/' }]}
+  index={[{ heading: 'All notices', items: notices.map((n) => ({ title: n.data.notice, href: `/taxes/irs-notices/${n.id}/`, blurb: n.data.meaning })) }]}
+  signupSource="notices"
+>
+  <div slot="intro" class="mt-6 keyfacts max-w-3xl">
+    <p class="eyebrow mb-2">Before you panic</p>
+    <ul>
+      <li>The IRS sends letters first. It does not call, text or email about a balance you have never heard of. A call or text is a scam.</li>
+      <li>Every notice has a response deadline printed on it. The clock started on the date of the letter, not the day you opened it.</li>
+      <li>Most notices are fixable with a phone call or a payment plan. The expensive ones are the ones that were ignored.</li>
+    </ul>
+  </div>
+  <TaxSolveCta />
+</HubLayout>

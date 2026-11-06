@@ -1,0 +1,51 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import TaxSolveCta from '@/components/TaxSolveCta.astro';
+
+export async function getStaticPaths() {
+  const notices = await getCollection('notices');
+  return notices.map((n) => ({ params: { slug: n.id }, props: { notice: n } }));
+}
+const { notice } = Astro.props;
+const { Content } = await render(notice);
+const d = notice.data;
+const related = (await Promise.all(d.related.map((id) => getEntry('notices', id)))).filter(Boolean);
+const faq = [
+  { q: `What does IRS ${d.notice} mean?`, a: d.meaning },
+  { q: `What is the deadline on ${d.notice}?`, a: d.deadline },
+  { q: `What happens if I ignore ${d.notice}?`, a: d.ifIgnored },
+  ...d.faq,
+];
+---
+<ArticleLayout
+  title={d.title}
+  description={`${d.meaning} Why you got it, the deadline, what happens if you ignore it, and what to do this week.`}
+  eyebrow={`IRS notice ${d.notice}`}
+  crumbs={[{ name: 'Taxes', href: '/taxes/' }, { name: 'IRS notices', href: '/taxes/irs-notices/' }, { name: d.notice, href: `/taxes/irs-notices/${notice.id}/` }]}
+  answer={d.meaning}
+  keyFacts={[`Why you got it: ${d.why}`, `Deadline: ${d.deadline}`, `If you ignore it: ${d.ifIgnored}`]}
+  faq={faq}
+  published={d.published}
+  updated={d.updated}
+  about={[`IRS ${d.notice}`]}
+  related={[
+    ...related.map((r) => ({ title: r!.data.title, href: `/taxes/irs-notices/${r!.id}/`, blurb: r!.data.meaning, eyebrow: 'Related notice' })),
+    { title: 'Unfiled tax returns: what actually happens', href: '/taxes/unfiled-returns/', eyebrow: 'Guide' },
+    { title: 'Tax scams: the IRS does not call first', href: '/taxes/tax-scams/', eyebrow: 'Scams' },
+  ]}
+  signupSource={`notice-${notice.id}`}
+>
+  <section>
+    <h2>What to do this week</h2>
+    <ol>{d.doThisWeek.map((s) => <li>{s}</li>)}</ol>
+  </section>
+  <Content />
+  {d.getHelpWhen.length > 0 && (
+    <section>
+      <h2>When to get help</h2>
+      <ul>{d.getHelpWhen.map((s) => <li>{s}</li>)}</ul>
+    </section>
+  )}
+  <TaxSolveCta slot="after-faq" />
+</ArticleLayout>

@@ -1,0 +1,65 @@
+---
+/**
+ * Article template: title as a question or claim, byline, answer paragraph,
+ * key facts box, body, FAQ, related, author bio. Article/NewsArticle + FAQPage schema.
+ * Also used for the hand-written pages (About, policies, recovery, report).
+ */
+import BaseLayout from './BaseLayout.astro';
+import Byline from '@/components/Byline.astro';
+import KeyFacts from '@/components/KeyFacts.astro';
+import Faq from '@/components/Faq.astro';
+import RelatedPages from '@/components/RelatedPages.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { article, faqPage } from '@/lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow?: string;
+  crumbs?: { name: string; href: string }[];
+  answer?: string; // the first paragraph: the answer in under 60 words
+  keyFacts?: string[];
+  faq?: { q: string; a: string }[];
+  related?: { title: string; href: string; blurb?: string; eyebrow?: string }[];
+  author?: string;
+  reviewedBy?: string;
+  published?: Date | string;
+  updated?: Date | string;
+  verified?: Date | string;
+  news?: boolean;
+  about?: string[];
+  schema?: (object | null | undefined)[];
+  signupSource?: string;
+  noindex?: boolean;
+  /** Static pages (policies) skip the article schema. */
+  isArticle?: boolean;
+}
+const {
+  title, description, eyebrow, crumbs = [], answer, keyFacts = [], faq = [], related = [],
+  author = 'team', reviewedBy, published, updated, verified, news = false, about, schema = [], signupSource = 'article', noindex = false, isArticle = true,
+} = Astro.props;
+const extra = [
+  isArticle && published && updated ? article({ url: Astro.url.pathname, title, description, published, updated, authorSlug: author, news, about }) : null,
+  faqPage(faq),
+  ...schema,
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={extra} published={published} updated={updated} type={isArticle ? 'article' : 'website'} noindex={noindex}>
+  <article class="container-site py-8 md:py-12">
+    <header class="max-w-3xl">
+      {eyebrow && <p class="eyebrow mb-2">{eyebrow}</p>}
+      <h1>{title}</h1>
+      <Byline author={author} reviewedBy={reviewedBy} published={published} updated={updated} verified={verified} />
+      {answer && <p class="text-lg md:text-xl leading-relaxed">{answer}</p>}
+    </header>
+    <div class="prose-site">
+      {keyFacts.length > 0 && <KeyFacts items={keyFacts} />}
+      <slot name="after-facts" />
+      <SignupForm source={signupSource} heading="Don't miss the next one" sub="The daily brief covers this and whatever's new tomorrow." />
+      <slot />
+      <Faq items={faq} />
+      <slot name="after-faq" />
+    </div>
+    <RelatedPages items={related} />
+  </article>
+</BaseLayout>

@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { howTo } from '@/lib/schema';
+const guides = (await getCollection('guides')).filter((g) => g.data.forParent.length > 0);
+const steps = [
+  { name: 'Sit down together, with their phone and a notebook', text: 'Tell them this is the same thing you did for yourself. Write down every account and password you set up; they keep the notebook.' },
+  { name: 'Put the phone carrier account under a PIN', text: 'Call or log in to the carrier and add an account PIN or port-out lock. This stops SIM swaps, the attack that defeats everything else.' },
+  { name: 'Set up a password manager and move the important passwords into it', text: 'Email, bank, phone, Medicare, Amazon. Make the master password a four-word phrase they can say out loud. Add yourself as the emergency contact.' },
+  { name: 'Turn on two-factor authentication for email and bank', text: 'Use the authenticator app inside the password manager where possible; otherwise text codes. Explain: "a code will arrive; never read it to anyone who calls."' },
+  { name: 'Turn on the spam-call and scam-text filters', text: 'On iPhone: Silence Unknown Callers and Filter Unknown Senders. On Android: Caller ID and spam protection. Add the carrier\'s free scam-blocking app.' },
+  { name: 'Freeze their credit at all three bureaus', text: 'Equifax, Experian and TransUnion. Free, ten minutes each, and it stops new accounts being opened in their name.' },
+  { name: 'Set up a family word', text: 'A word only the family knows. Any call claiming to be a grandchild in trouble has to say it. Practice once.' },
+  { name: 'Put the rules on the fridge', text: 'Five lines: Nobody legitimate asks for gift cards. Hang up and call back on the number on the card. Never read a code to anyone. If it is urgent, it is a scam. Call me first.' },
+];
+---
+<ArticleLayout
+  title="The Family Setup Kit: protect a parent's phone and accounts in one afternoon"
+  description="A one-afternoon checklist to make an aging parent a hard target: carrier PIN, password manager with you as emergency contact, two-factor on email and bank, scam-call filters, a credit freeze and a family word. Printable."
+  eyebrow="For a parent"
+  crumbs={[{ name: 'Protect', href: '/protect/' }, { name: 'Family Setup Kit', href: '/protect/parents/' }]}
+  answer="Eight steps, about three hours, done once. The order matters: the carrier PIN first, because a SIM swap defeats everything after it; the password manager second, because every other step depends on it."
+  keyFacts={[
+    'Carrier account PIN or port-out lock first; it blocks SIM swaps.',
+    'Password manager with you as emergency contact; master password is a four-word phrase.',
+    'Two-factor on email and bank; the rule is "never read a code to anyone who calls."',
+    'Credit freeze at all three bureaus, free, ten minutes each.',
+    'A family word for any "grandchild in trouble" call.',
+  ]}
+  published="2027-01-20"
+  updated="2027-01-20"
+  schema={[howTo({ url: '/protect/parents/', name: 'The Family Setup Kit', description: 'Protect a parent\'s phone and accounts in one afternoon.', totalTime: 'PT3H', steps, updated: '2027-01-20' })]}
+  related={guides.slice(0, 5).map((g) => ({ title: g.data.title, href: `/protect/${g.id}/`, blurb: g.data.atRisk, eyebrow: 'Guide' }))}
+  signupSource="family-kit"
+>
+  <h2>The afternoon, step by step</h2>
+  <ol class="space-y-4">
+    {steps.map((s, i) => <li id={`step-${i + 1}`}><strong class="font-display">{s.name}.</strong> {s.text}</li>)}
+  </ol>
+  <h2>The fridge sheet</h2>
+  <div class="bg-white border-2 border-ink rounded-brand p-6 font-display text-lg">
+    <p class="eyebrow mb-3">Five rules</p>
+    <ol class="font-bold">
+      <li>Nobody legitimate asks for gift cards. Ever.</li>
+      <li>Hang up. Call back on the number on the card or the bill.</li>
+      <li>Never read a code to anyone who calls or texts.</li>
+      <li>If it's urgent, it's a scam. Real problems can wait an hour.</li>
+      <li>Call me first. I will never be annoyed.</li>
+    </ol>
+  </div>
+  <h2>What to tell them, in words that land</h2>
+  <p>Not "you're going to get scammed." Try: "The people who do this are professionals and they beat bank managers and engineers every day. I set this up for myself last week. I'm doing it for you because it takes an afternoon now and it saves a nightmare later." Then do it together, not for them.</p>
+</ArticleLayout>

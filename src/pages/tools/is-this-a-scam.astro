@@ -1,0 +1,107 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { SITE } from '@/lib/site';
+
+const scams = await getCollection('scams');
+// Keyword index built at build time: each scam's title, aliases, impersonated names and red-flag words.
+const index = scams.map((s) => ({
+  slug: s.id,
+  title: s.data.title,
+  definition: s.data.definition,
+  keywords: [
+    ...s.data.title.toLowerCase().split(/\W+/),
+    ...s.data.aliases.flatMap((a) => a.toLowerCase().split(/\W+/)),
+    ...s.data.impersonates.flatMap((a) => a.toLowerCase().split(/\W+/)),
+  ].filter((w) => w.length > 3 && !['scam', 'the', 'your', 'with', 'from', 'that', 'this'].includes(w)),
+}));
+const description = 'Paste a suspicious text, email or message and get an instant read on which known scam it matches, what to do, and a one-click way to report it so other readers get warned. Nothing you paste leaves your browser unless you choose to report it.';
+const schema = [{ '@type': 'WebApplication', name: 'Is this a scam?', url: 'https://latchkeydaily.com/tools/is-this-a-scam/', applicationCategory: 'SecurityApplication', operatingSystem: 'Any', description, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }];
+---
+<BaseLayout title="Is this a scam? Check a text, email or message" description={description} crumbs={[{ name: 'Tools', href: '/tools/' }, { name: 'Is this a scam?', href: '/tools/is-this-a-scam/' }]} schema={schema}>
+  <div class="container-site py-8 md:py-12">
+    <div class="max-w-3xl">
+      <p class="eyebrow mb-2">Tool</p>
+      <h1>Is this a scam?</h1>
+      <p class="text-lg text-muted mt-3">{description}</p>
+
+      <form id="checker" class="mt-6">
+        <label for="message" class="font-display font-bold">Paste the message</label>
+        <textarea id="message" name="message" rows="6" class="mt-2 w-full rounded-brand border-2 border-ink bg-white p-4 focus:outline-none focus:ring-2 focus:ring-orange" placeholder="Paste the text, email or DM here. Include the sender if you have it."></textarea>
+        <button type="submit" class="btn btn-primary mt-3">Check it</button>
+      </form>
+
+      <div id="result" class="mt-6 hidden" aria-live="polite"></div>
+
+      <noscript>
+        <div class="keyfacts">
+          <p class="eyebrow mb-2">Without JavaScript, use the rules</p>
+          <ul>
+            <li>It is urgent, and something bad happens if you don't act now: scam.</li>
+            <li>It asks you to pay by gift card, wire, crypto or a payment app to a stranger: scam.</li>
+            <li>It asks you to click a link to "verify," "claim" or "unlock": scam. Go to the real site yourself.</li>
+            <li>It asks for a code that was texted to you: scam, always.</li>
+          </ul>
+          <p><a href="/scams/">Browse the scam database</a> to find the match.</p>
+        </div>
+      </noscript>
+
+      <section class="mt-10 bg-cream rounded-brand p-6">
+        <h2 class="mt-0">Report it to Latchkey Daily</h2>
+        <p class="text-muted">Reports feed the alerts that warn other readers, and the report counts on every scam page. We remove phone numbers and names before anything is published.</p>
+        <form action={SITE.scamReportAction} method="POST" class="mt-4 grid gap-3">
+          <label class="block"><span class="font-semibold text-sm">The message</span><textarea name="message" rows="4" required class="mt-1 w-full rounded-brand border border-line bg-white p-3"></textarea></label>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <label class="block"><span class="font-semibold text-sm">How it reached you</span>
+              <select name="channel" class="mt-1 w-full rounded-brand border border-line bg-white p-3">
+                <option value="text">Text message</option><option value="phone">Phone call</option><option value="email">Email</option><option value="social">Social media or DM</option><option value="web">Website or pop-up</option><option value="mail">Mail</option><option value="in-person">In person</option>
+              </select></label>
+            <label class="block"><span class="font-semibold text-sm">Your email (optional, for follow-up)</span><input type="email" name="email" class="mt-1 w-full rounded-brand border border-line bg-white p-3" /></label>
+          </div>
+          <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="paid" value="yes" /> I paid or gave information</label>
+          <button type="submit" class="btn btn-dark w-fit">Send the report</button>
+        </form>
+        <p class="text-xs text-muted mt-3">If you paid or gave information, go to <a href="/scams/recovery/">what to do in the next hour</a> first.</p>
+      </section>
+
+      <SignupForm source="is-this-a-scam" heading="Get the alerts" sub="New scam waves, the day we see them." />
+    </div>
+  </div>
+
+  <script is:inline define:vars={{ index }}>
+    const form = document.getElementById('checker');
+    const out = document.getElementById('result');
+    const rules = [
+      { re: /gift ?card|apple card|google play card|steam card/i, flag: 'Asks for gift cards. No legitimate business or agency is paid in gift cards.' },
+      { re: /wire|western union|moneygram|bitcoin|crypto|zelle|venmo|cash ?app/i, flag: 'Asks for an irreversible payment method.' },
+      { re: /urgent|immediately|within 24 hours|right now|final notice|suspend|suspended|arrest|warrant|legal action/i, flag: 'Creates urgency or a threat. Real problems can wait an hour.' },
+      { re: /verify|confirm your|update your|unlock|reactivate|click (here|the link)|log ?in (here|now)/i, flag: 'Asks you to click a link to verify or unlock something. Go to the real site yourself instead.' },
+      { re: /code|one-time|otp|verification number/i, flag: 'Involves a code. Never read or forward a code to anyone, for any reason.' },
+      { re: /irs|social security|medicare|ssa\b/i, flag: 'Claims to be a government agency. The IRS, SSA and Medicare write first; they do not call, text or email about money first.' },
+      { re: /toll|usps|ups|fedex|delivery|package|parcel/i, flag: 'A delivery or toll notice. These come through the carrier app or the official site, never a link in a text.' },
+      { re: /grandma|grandpa|nana|papa|it'?s me|in jail|bail|accident|hospital/i, flag: 'A relative-in-trouble story. Hang up and call the person directly on their real number.' },
+      { re: /tech support|microsoft|apple support|virus|infected|refund/i, flag: 'A tech-support or refund pitch. Real companies do not call about infections or refunds.' },
+      { re: /investment|guaranteed|returns|double your|crypto trading|whatsapp group/i, flag: 'Guaranteed returns. There are none.' },
+    ];
+    const tokenize = (t) => t.toLowerCase().split(/\W+/).filter((w) => w.length > 3);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = document.getElementById('message').value || '';
+      const words = new Set(tokenize(text));
+      const flags = rules.filter((r) => r.re.test(text)).map((r) => r.flag);
+      const matches = index.map((s) => ({ s, score: s.keywords.filter((k) => words.has(k)).length })).filter((m) => m.score > 0).sort((a, b) => b.score - a.score).slice(0, 3);
+      const verdict = flags.length >= 2 ? 'Almost certainly a scam.' : flags.length === 1 ? 'Looks like a scam.' : matches.length ? 'Possibly a scam. Compare it to the match below.' : 'No obvious scam pattern, but that is not a guarantee.';
+      out.classList.remove('hidden');
+      out.innerHTML = `
+        <div class="keyfacts">
+          <p class="eyebrow mb-2">Verdict</p>
+          <p class="font-display font-black text-2xl mb-3">${verdict}</p>
+          ${flags.length ? `<ul>${flags.map((f) => `<li>${f}</li>`).join('')}</ul>` : '<p>Nothing in the text tripped a rule. If it still feels wrong, trust that: do not click, do not pay, and verify through the real company or person by a number you already have.</p>'}
+        </div>
+        ${matches.length ? `<h2 class="text-xl">Closest match in the scam database</h2><ul class="grid gap-3 list-none pl-0">${matches.map((m) => `<li class="card"><a href="/scams/${m.s.slug}/" class="font-display font-bold text-lg">${m.s.title}</a><p class="text-sm text-muted mt-1">${m.s.definition}</p></li>`).join('')}</ul>` : ''}
+        <p class="mt-4"><a href="/scams/recovery/">Already clicked, paid or replied? Do this now.</a></p>`;
+      out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,57 @@
+---
+/**
+ * Client-side search over a build-time index of titles and descriptions. noindex.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { taxGuides } from '@/data/tax-guides';
+import { hubGuides } from '@/data/hub-guides';
+
+const [scams, guides, glossary, notices, issues, recommends, videos, alerts] = await Promise.all([
+  getCollection('scams'), getCollection('guides'), getCollection('glossary'), getCollection('notices'), getCollection('issues'), getCollection('recommends'), getCollection('videos'), getCollection('alerts'),
+]);
+const index = [
+  ...scams.map((s) => ({ t: s.data.title, d: s.data.definition, u: `/scams/${s.id}/`, k: 'Scam' })),
+  ...alerts.map((a) => ({ t: a.data.title, d: a.data.summary, u: `/scams/alerts/${a.id}/`, k: 'Alert' })),
+  ...guides.map((g) => ({ t: g.data.title, d: g.data.atRisk, u: `/protect/${g.id}/`, k: 'Guide' })),
+  ...glossary.map((g) => ({ t: g.data.term, d: g.data.definition, u: `/glossary/${g.id}/`, k: 'Glossary' })),
+  ...notices.map((n) => ({ t: n.data.title, d: n.data.meaning, u: `/taxes/irs-notices/${n.id}/`, k: 'IRS notice' })),
+  ...issues.map((i) => ({ t: i.data.title, d: i.data.preview, u: `/newsletter/issues/${i.id}/`, k: 'Issue' })),
+  ...recommends.map((r) => ({ t: r.data.title, d: r.data.forWhom, u: r.data.kind === 'category' ? `/recommends/${r.data.category}/` : `/recommends/${r.data.category}/${r.id.split('/').pop()}/`, k: 'Recommends' })),
+  ...videos.map((v) => ({ t: v.data.title, d: v.data.description, u: `/watch/${v.id}/`, k: 'Video' })),
+  ...taxGuides.map((g) => ({ t: g.title, d: g.description, u: `/taxes/${g.slug}/`, k: 'Taxes' })),
+  ...hubGuides.map((g) => ({ t: g.title, d: g.description, u: `/${g.hub}/${g.slug}/`, k: g.hub[0].toUpperCase() + g.hub.slice(1) })),
+];
+---
+<BaseLayout title="Search" description="Search Latchkey Daily." noindex crumbs={[{ name: 'Search', href: '/search/' }]}>
+  <div class="container-site py-8 md:py-12 max-w-3xl">
+    <h1 class="uppercase">Search</h1>
+    <form action="/search/" method="GET" class="flex gap-2 mt-6">
+      <label for="q" class="sr-only">Search</label>
+      <input id="q" name="q" type="search" placeholder="grandparent scam, CP14, passkey…" class="flex-1 rounded-brand border-2 border-ink bg-white px-4 py-3" />
+      <button class="btn btn-dark" type="submit">Search</button>
+    </form>
+    <div id="results" class="mt-8" aria-live="polite"></div>
+    <noscript><p class="mt-6">Search needs JavaScript. Browse the <a href="/scams/">scam database</a>, the <a href="/protect/">guides</a> or the <a href="/glossary/">glossary</a> instead.</p></noscript>
+  </div>
+  <script is:inline define:vars={{ index }}>
+    const q = new URLSearchParams(location.search).get('q') || '';
+    const input = document.getElementById('q');
+    const out = document.getElementById('results');
+    input.value = q;
+    const run = (term) => {
+      const words = term.toLowerCase().split(/\s+/).filter(Boolean);
+      if (!words.length) { out.innerHTML = ''; return; }
+      const hits = index.map((e) => {
+        const hay = (e.t + ' ' + e.d).toLowerCase();
+        const score = words.reduce((s, w) => s + (e.t.toLowerCase().includes(w) ? 3 : 0) + (hay.includes(w) ? 1 : 0), 0);
+        return { e, score };
+      }).filter((h) => h.score > 0).sort((a, b) => b.score - a.score).slice(0, 30);
+      out.innerHTML = hits.length
+        ? `<p class="eyebrow mb-3">${hits.length} results</p><ul class="divide-y divide-line border-y border-line list-none pl-0">${hits.map((h) => `<li class="py-3"><span class="eyebrow">${h.e.k}</span><a href="${h.e.u}" class="block font-display font-bold text-lg text-ink">${h.e.t}</a><p class="text-sm text-muted">${h.e.d}</p></li>`).join('')}</ul>`
+        : `<p>No results for "${term}". Try the <a href="/scams/">scam database</a> or the <a href="/glossary/">glossary</a>.</p>`;
+    };
+    run(q);
+    input.addEventListener('input', (e) => run(e.target.value));
+  </script>
+</BaseLayout>

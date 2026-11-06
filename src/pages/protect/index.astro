@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+
+const guides = (await getCollection('guides')).sort((a, b) => a.data.service.localeCompare(b.data.service));
+const cats: Record<string, string> = { email: 'Email', phone: 'Phones and devices', social: 'Social media', banking: 'Banks', payments: 'Payment apps', accounts: 'Accounts and IDs', home: 'Home network', family: 'Family' };
+const groups = Object.entries(cats).map(([key, heading]) => ({ heading, items: guides.filter((g) => g.data.category === key).map((g) => ({ title: g.data.title, href: `/protect/${g.id}/`, blurb: g.data.atRisk })) })).filter((g) => g.items.length);
+const startHere = ['gmail', 'iphone', 'android', 'facebook', 'bank-login'].map((id) => guides.find((g) => g.id === id)).filter(Boolean).map((g) => ({ title: g!.data.title, href: `/protect/${g!.id}/`, blurb: g!.data.atRisk, eyebrow: '10 minutes' }));
+---
+<HubLayout
+  title="Protect"
+  eyebrow="The lockdown guides"
+  description="Step-by-step guides to lock down every account and device your family uses, each with a ten-minute checklist, the full walkthrough with screenshots, a version to do for a parent, and what to do if you get locked out. Every guide shows the date it was last verified."
+  crumbs={[{ name: 'Protect', href: '/protect/' }]}
+  startHere={startHere}
+  index={groups}
+  signupSource="protect-hub"
+>
+  <div slot="intro" class="mt-8 grid gap-3 sm:grid-cols-3">
+    <a href="/protect/deadbolt/" class="card no-underline hover:border-orange"><p class="eyebrow mb-1">The series</p><span class="font-display font-bold text-lg">The 10-Minute Deadbolt: one account a day &rarr;</span></a>
+    <a href="/protect/parents/" class="card no-underline hover:border-orange"><p class="eyebrow mb-1">For a parent</p><span class="font-display font-bold text-lg">The Family Setup Kit: one afternoon, done &rarr;</span></a>
+    <a href="/protect/identity-theft/" class="card no-underline hover:border-orange"><p class="eyebrow mb-1">Identity</p><span class="font-display font-bold text-lg">Freeze your credit and stop identity theft &rarr;</span></a>
+  </div>
+</HubLayout>

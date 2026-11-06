@@ -1,0 +1,26 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SignupForm from '@/components/SignupForm.astro';
+import { person } from '@/lib/schema';
+
+export async function getStaticPaths() {
+  const team = await getCollection('team');
+  return team.map((p) => ({ params: { slug: p.id }, props: { member: p } }));
+}
+const { member } = Astro.props;
+const { Content } = await render(member);
+const d = member.data;
+const schema = [{ ...person({ name: d.name, slug: member.id, role: d.role, bio: d.bio, knowsAbout: d.knowsAbout, sameAs: d.sameAs, image: d.image }), mainEntityOfPage: `https://latchkeydaily.com/about/team/${member.id}/` }];
+---
+<BaseLayout title={`${d.name}, ${d.role}`} description={d.bio} crumbs={[{ name: 'About', href: '/about/' }, { name: 'Team', href: '/about/team/' }, { name: d.name, href: `/about/team/${member.id}/` }]} schema={schema}>
+  <article class="container-site py-8 md:py-12">
+    <p class="eyebrow mb-2">{d.role}</p>
+    <h1>{d.name}</h1>
+    <p class="text-lg md:text-xl mt-4 max-w-3xl">{d.bio}</p>
+    {d.knowsAbout.length > 0 && <p class="text-sm text-muted mt-3">Covers: {d.knowsAbout.join(', ')}</p>}
+    {d.sameAs.length > 0 && <ul class="flex flex-wrap gap-3 text-sm mt-2 list-none pl-0">{d.sameAs.map((u) => <li><a href={u} rel="me noopener">{new URL(u).hostname.replace('www.', '')}</a></li>)}</ul>}
+    <div class="prose-site mt-6"><Content /></div>
+    <SignupForm source={`team-${member.id}`} heading="Read the daily brief" sub="Free, weekday mornings." />
+  </article>
+</BaseLayout>

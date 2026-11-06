@@ -1,0 +1,40 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { formatDate } from '@/lib/site';
+
+export async function getStaticPaths() {
+  const alerts = await getCollection('alerts');
+  return alerts.map((a) => ({ params: { slug: a.id }, props: { alert: a } }));
+}
+const { alert } = Astro.props;
+const { Content } = await render(alert);
+const d = alert.data;
+const scam = d.scam ? await getEntry('scams', d.scam) : null;
+const guide = d.guide ? await getEntry('guides', d.guide) : null;
+const related = [
+  ...(scam ? [{ title: scam.data.title, href: `/scams/${scam.id}/`, blurb: scam.data.definition, eyebrow: 'The scam' }] : []),
+  ...(guide ? [{ title: guide.data.title, href: `/protect/${guide.id}/`, blurb: guide.data.atRisk, eyebrow: 'Lock it down' }] : []),
+];
+---
+<ArticleLayout
+  title={d.title}
+  description={d.summary}
+  eyebrow={`Scam alert · ${formatDate(d.date)} · ${d.status}`}
+  crumbs={[{ name: 'Scams', href: '/scams/' }, { name: 'Alerts', href: '/scams/alerts/' }, { name: d.title, href: `/scams/alerts/${alert.id}/` }]}
+  answer={d.summary}
+  keyFacts={[`Status: ${d.status}`, `The action: ${d.action}`, ...(scam ? [`Part of: ${scam.data.title}`] : [])]}
+  published={d.date}
+  updated={d.date}
+  news
+  related={related}
+  signupSource="alert"
+>
+  <Content />
+  {d.sources.length > 0 && (
+    <section>
+      <h2>Sources</h2>
+      <ul>{d.sources.map((s) => <li><a href={s.url} rel="noopener">{s.name}</a></li>)}</ul>
+    </section>
+  )}
+</ArticleLayout>

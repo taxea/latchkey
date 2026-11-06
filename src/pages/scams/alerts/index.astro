@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+const alerts = (await getCollection('alerts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<HubLayout
+  title="Scam alerts"
+  eyebrow="Dated warnings"
+  description="Dated warnings about scam waves and new variants as they happen, each tied to the scam it belongs to and the guide that stops it. Newest first."
+  crumbs={[{ name: 'Scams', href: '/scams/' }, { name: 'Alerts', href: '/scams/alerts/' }]}
+  latest={alerts.map((a) => ({ title: a.data.title, href: `/scams/alerts/${a.id}/`, blurb: a.data.summary, date: a.data.date }))}
+  signupSource="alerts"
+/>

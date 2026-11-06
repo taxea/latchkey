@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SITE } from '@/lib/site';
+---
+<BaseLayout title="Get help with the IRS" description="A free 15-minute consult with an Enrolled Agent at TaxSolve to find out what you owe and what your options are. Latchkey Daily is owned by the owner of TaxSolve; here is how that works." crumbs={[{ name: 'Taxes', href: '/taxes/' }, { name: 'Get help', href: '/taxes/get-help/' }]} hideCrumbs>
+  <div class="container-site py-12 md:py-20 max-w-3xl">
+    <p class="eyebrow mb-3">Get help</p>
+    <h1>Talk to an Enrolled Agent about your IRS situation. Free.</h1>
+    <p class="text-lg md:text-xl mt-5">If you have unfiled years, a balance you cannot pay, or a letter you do not understand, a 15-minute call with TaxSolve will tell you what you actually owe and what your options are. No pressure and no obligation.</p>
+    <ul class="mt-6 space-y-2">
+      <li>Enrolled Agents licensed to represent you before the IRS, in all 50 states</li>
+      <li>They pull your IRS transcripts and tell you the real number before you decide anything</li>
+      <li>Payment plans, Currently Not Collectible status, and Offers in Compromise when you qualify, not when an ad says you do</li>
+    </ul>
+    <a href={SITE.taxsolveConsultUrl} class="btn btn-primary mt-8 text-lg" rel="sponsored">Book a free consult at TaxSolve</a>
+    <div class="mt-10 bg-cream rounded-brand p-6 text-sm">
+      <p class="eyebrow mb-2">Disclosure, in full</p>
+      <p>{SITE.ownership} We send readers to TaxSolve because we know the work is done properly, and we say so on every tax page. Our tax content is written to be useful whether or not you ever call. If you would rather handle it yourself, every guide in the <a href="/taxes/">Taxes section</a> tells you how. <a href="/about/ownership/">Our ownership policy.</a></p>
+    </div>
+  </div>
+</BaseLayout>

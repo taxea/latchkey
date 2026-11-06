@@ -1,0 +1,11 @@
+---
+/** The key-facts box: three to five bullets near the top of every article and guide. This is what answer engines lift. */
+interface Props { title?: string; items: string[] }
+const { title = 'Key facts', items } = Astro.props;
+---
+<aside class="keyfacts" aria-label={title}>
+  <p class="eyebrow mb-2">{title}</p>
+  <ul>
+    {items.map((i) => <li>{i}</li>)}
+  </ul>
+</aside>

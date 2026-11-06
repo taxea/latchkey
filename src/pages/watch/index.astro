@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import HubLayout from '@/layouts/HubLayout.astro';
+import { SITE } from '@/lib/site';
+const videos = (await getCollection('videos')).sort((a, b) => b.data.uploadDate.valueOf() - a.data.uploadDate.valueOf());
+const series: Record<string, string> = { deadbolt: 'The 10-Minute Deadbolt', 'scam-of-the-week': 'Scam of the Week', 'long-form': 'Long-form', live: 'Live' };
+const groups = Object.entries(series).map(([key, heading]) => ({ heading, items: videos.filter((v) => v.data.series === key).map((v) => ({ title: v.data.title, href: `/watch/${v.id}/`, blurb: v.data.description })) })).filter((g) => g.items.length);
+---
+<HubLayout
+  title="Watch"
+  eyebrow="Video"
+  description="Every Latchkey Daily video with its full transcript: the 10-Minute Deadbolt lockdowns, Scam of the Week, and the long-form explainers. One topic done properly, one action at the end."
+  crumbs={[{ name: 'Watch', href: '/watch/' }]}
+  latest={videos.slice(0, 6).map((v) => ({ title: v.data.title, href: `/watch/${v.id}/`, blurb: v.data.description, date: v.data.uploadDate }))}
+  index={groups}
+  signupSource="watch"
+>
+  <p slot="intro" class="mt-4 text-sm"><a href={SITE.social.youtube} rel="me">Subscribe on YouTube</a> for the videos; subscribe below for the brief that goes with them.</p>
+</HubLayout>
