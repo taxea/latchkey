@@ -28,6 +28,11 @@ const schema = host ? [person({ name: host.data.name, slug: host.id, role: host.
         <div class="mt-8 max-w-xl">
           <SignupForm variant="hero" source="hero" />
           <p class="text-sm text-muted mt-3">Join <strong class="text-ink">{subs}</strong> readers. <a href="/newsletter/sample/">Read a sample issue</a>.</p>
+          <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold list-none pl-0">
+            <li><span class="text-olive mr-1" aria-hidden="true">&#10003;</span>Five minutes, one action, every weekday</li>
+            <li><span class="text-olive mr-1" aria-hidden="true">&#10003;</span>Free access to <a href="/tools/in-case/" class="text-ink">In Case</a>, the family briefing</li>
+            <li><span class="text-olive mr-1" aria-hidden="true">&#10003;</span>Free access to <a href="/tools/serum/" class="text-ink">Serum</a>, the lab tracker</li>
+          </ul>
         </div>
       </div>
       <div class="md:col-span-2 hidden md:block" aria-hidden="true">
@@ -175,7 +180,7 @@ const schema = host ? [person({ name: host.data.name, slug: host.id, role: host.
     <div class="bg-orange text-white rounded-brand p-8 md:p-12 grid gap-6 md:grid-cols-2 items-center">
       <div>
         <h2 class="mt-0 text-white uppercase text-3xl md:text-4xl">Forward-worthy. Five minutes. Free.</h2>
-        <p class="text-white/90 mt-2">One scam, one fix, one thing worth knowing. Send it to your brother.</p>
+        <p class="text-white/90 mt-2">One scam, one fix, one thing worth knowing. Plus free access to In Case and Serum, two private tools your family will actually use. Send it to your brother.</p>
       </div>
       <form action={SITE.signupAction} method={SITE.signupMethod} class="flex flex-col sm:flex-row gap-2" data-signup="mid">
         <label for="signup-mid" class="sr-only">Email address</label>
@@ -189,8 +194,8 @@ const schema = host ? [person({ name: host.data.name, slug: host.id, role: host.
   <!-- 9. Latchkey Tools: In Case and Serum -->
   <section class="bg-cream border-y border-line">
     <div class="container-site py-12">
-      <p class="eyebrow mb-2">Latchkey Tools · coming 2027</p>
-      <h2 class="mt-0">Two private tools your family will actually need</h2>
+      <p class="eyebrow mb-2">Latchkey Tools · free with your subscription</p>
+      <h2 class="mt-0">Subscribe free and get two private tools your family will actually need</h2>
       <div class="grid gap-4 md:grid-cols-2 mt-5">
         <a href="/tools/in-case/" class="card no-underline hover:border-orange flex flex-col gap-2">
           <span class="font-display font-black text-3xl text-ink">In Case</span>

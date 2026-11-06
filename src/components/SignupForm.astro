@@ -33,5 +33,5 @@ const isHero = variant === 'hero';
     <input type="hidden" name="source" value={source} />
     <button type="submit" class="btn btn-primary whitespace-nowrap">{isHero ? 'Get the daily brief' : 'Subscribe free'}</button>
   </form>
-  <p class={`text-xs mt-2 ${variant === 'footer' ? 'text-cream/70' : 'text-muted'}`}>Free. Weekday mornings. Unsubscribe in one click.</p>
+  <p class={`text-xs mt-2 ${variant === 'footer' ? 'text-cream/70' : 'text-muted'}`}>Free. Weekday mornings. Includes free access to <a href="/tools/in-case/" class="underline">In Case</a> and <a href="/tools/serum/" class="underline">Serum</a>, the Latchkey tools. Unsubscribe in one click.</p>
 </div>

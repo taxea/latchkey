@@ -5,7 +5,7 @@
   //   Deploy command: npx wrangler deploy
   // Then add the custom domain latchkeydaily.com under the Worker's Settings > Domains & Routes.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "latchkeydaily",
+  "name": "latchkey",
   "compatibility_date": "2026-11-05",
   // Wrangler runs this before deploying, so `npx wrangler deploy` alone produces a full build.
   "build": {
