@@ -1,0 +1,101 @@
+---
+/**
+ * Homepage showcase for the two Latchkey tools. Problem first, then what the tool does, then the benefit.
+ * Each block carries a small CSS/SVG mock of the product so a reader can picture it.
+ */
+import { MEMBERSHIP } from '@/lib/site';
+---
+<section class="bg-cream border-y border-line" aria-labelledby="tools-heading">
+  <div class="container-site py-14">
+    <p class="eyebrow mb-2">Latchkey Tools · free with your subscription</p>
+    <h2 id="tools-heading" class="mt-0 max-w-3xl">Two private tools built for the sandwich years. Not an app store. Two problems, solved.</h2>
+
+    <!-- In Case -->
+    <div class="mt-10 grid gap-8 lg:grid-cols-2 items-center">
+      <div>
+        <p class="tag mb-4"><span>In Case · the family briefing</span></p>
+        <h3 class="mt-0 text-3xl md:text-4xl leading-tight">If something happened to you tomorrow, could your family find the mortgage?</h3>
+        <p class="text-muted mt-3 text-lg">Most couples have one person who knows where everything is. In Case is the packet that person would leave behind: every account, property, policy and auto-pay, who to call, and the plan for the first week. Written once, reviewed once a month, sealed until it's needed.</p>
+        <ul class="mt-5 space-y-3 list-none pl-0">
+          <li class="flex gap-3"><span class="shrink-0 w-8 h-8 rounded-full bg-orange text-white font-display font-black flex items-center justify-center">1</span><div><strong>One packet, everything they'd need.</strong><span class="block text-muted">Banks, cards, mortgage, brokerage, retirement, insurance, the house, the car, the business, the subscriptions, and how each one passes: will, joint, beneficiary, trust.</span></div></li>
+          <li class="flex gap-3"><span class="shrink-0 w-8 h-8 rounded-full bg-orange text-white font-display font-black flex items-center justify-center">2</span><div><strong>A plan for the worst week.</strong><span class="block text-muted">First day, first week, first month: death certificates, the life-insurance claim, keeping the lights and the mortgage paid, freezing credit, the attorney and the CPA with a printout in hand.</span></div></li>
+          <li class="flex gap-3"><span class="shrink-0 w-8 h-8 rounded-full bg-orange text-white font-display font-black flex items-center justify-center">3</span><div><strong>Sealed until it's needed.</strong><span class="block text-muted">Encrypted so even we can't read it. Arm the switch, check in once a month, and if you ever stop showing up, the one person you named gets a read-only copy. Until then, their link only says it's locked.</span></div></li>
+        </ul>
+        <div class="mt-6 flex flex-wrap gap-3 items-center">
+          <a href="/tools/in-case/" class="btn btn-dark">How In Case works</a>
+          <span class="text-sm text-muted">Printable briefing free for subscribers · living vault with <a href="/membership/">Vault</a></span>
+        </div>
+      </div>
+      <!-- In Case mock -->
+      <div class="bg-white border-2 border-ink rounded-brand p-5 shadow-[8px_8px_0_#ff5a00]" aria-label="Illustration of an In Case briefing" role="img">
+        <div class="flex items-center justify-between">
+          <p class="font-display font-black uppercase text-lg">The Morales family briefing</p>
+          <span class="tag text-[10px]"><span>Reviewed Oct 2027</span></span>
+        </div>
+        <p class="text-xs text-muted mt-1">For: Dani and Luis · Executor: Dani · Will: fire safe, hall closet · Keys: 1Password Emergency Kit</p>
+        <div class="mt-4 grid grid-cols-[1fr_auto_auto] gap-x-3 text-sm">
+          <p class="eyebrow text-[10px] mb-1">Money</p><p class="eyebrow text-[10px] mb-1">Passes by</p><p class="eyebrow text-[10px] mb-1 text-right">Balance</p>
+          <p class="border-t border-line py-1.5">Chase checking ····4417</p><p class="border-t border-line py-1.5 text-muted">Joint</p><p class="border-t border-line py-1.5 text-right">$18,240</p>
+          <p class="border-t border-line py-1.5">Fidelity 401(k)</p><p class="border-t border-line py-1.5 text-muted">Beneficiary</p><p class="border-t border-line py-1.5 text-right">$412,900</p>
+          <p class="border-t border-line py-1.5">Mortgage, Wells Fargo</p><p class="border-t border-line py-1.5 text-muted">Joint</p><p class="border-t border-line py-1.5 text-right text-orange-dark">−$286,500</p>
+          <p class="border-t border-line py-1.5">Term life, Banner, $1M</p><p class="border-t border-line py-1.5 text-muted">Beneficiary</p><p class="border-t border-line py-1.5 text-right">Dani</p>
+          <p class="border-t border-b border-line py-1.5">Electric, water, phone, 6 subscriptions</p><p class="border-t border-b border-line py-1.5 text-muted">Auto-pay</p><p class="border-t border-b border-line py-1.5 text-right">$612/mo</p>
+        </div>
+        <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+          <div class="bg-cream rounded-lg p-2"><p class="text-[10px] uppercase tracking-widest text-muted">Net worth</p><p class="font-display font-black">$1.21M</p></div>
+          <div class="bg-cream rounded-lg p-2"><p class="text-[10px] uppercase tracking-widest text-muted">90-day cash</p><p class="font-display font-black">$1.02M</p></div>
+          <div class="bg-ink text-cream rounded-lg p-2"><p class="text-[10px] uppercase tracking-widest text-yellow">Family link</p><p class="font-display font-black">Sealed</p></div>
+        </div>
+        <p class="text-[11px] text-muted mt-3">Illustration. Names and figures are invented. Passwords never live here; each item points at 1Password.</p>
+      </div>
+    </div>
+
+    <!-- Serum -->
+    <div class="mt-16 grid gap-8 lg:grid-cols-2 items-center">
+      <!-- Serum mock -->
+      <div class="order-2 lg:order-1 bg-white border-2 border-ink rounded-brand p-5 shadow-[8px_8px_0_#5e7f4f]" aria-label="Illustration of a Serum marker chart" role="img">
+        <div class="flex items-center justify-between">
+          <p class="font-display font-black uppercase text-lg">LDL cholesterol</p>
+          <span class="text-xs font-semibold bg-orange/15 text-orange-dark rounded-full px-2 py-0.5">High · 148 mg/dL</span>
+        </div>
+        <p class="text-xs text-muted mt-1">7 draws · 2021 to 2027 · Quest, Labcorp · reference &lt; 100 (lab)</p>
+        <svg viewBox="0 0 520 200" class="w-full mt-3" aria-hidden="true">
+          <rect x="40" y="110" width="470" height="70" fill="#5e7f4f" fill-opacity="0.12"/>
+          <text x="46" y="174" font-size="11" fill="#5e7f4f" font-family="Inter, sans-serif">in range (&lt; 100)</text>
+          <line x1="40" y1="180" x2="510" y2="180" stroke="#d9d2c2"/>
+          <polyline points="60,118 130,112 200,104 270,96 340,84 410,70 480,58" fill="none" stroke="#111111" stroke-width="2"/>
+          <circle cx="60" cy="118" r="5" fill="#5e7f4f"/><circle cx="130" cy="112" r="5" fill="#5e7f4f"/><circle cx="200" cy="104" r="5" fill="#ffc83d"/><circle cx="270" cy="96" r="5" fill="#ffc83d"/><circle cx="340" cy="84" r="5" fill="#ff5a00"/><circle cx="410" cy="70" r="5" fill="#ff5a00"/><circle cx="480" cy="58" r="6" fill="#ff5a00" stroke="#111111" stroke-width="2"/>
+          <text x="52" y="196" font-size="11" fill="#5c5a55" font-family="Inter, sans-serif">2021</text><text x="472" y="196" font-size="11" fill="#5c5a55" font-family="Inter, sans-serif">2027</text>
+          <text x="440" y="48" font-size="12" font-weight="700" fill="#111111" font-family="Inter, sans-serif">148</text>
+          <text x="24" y="122" font-size="11" fill="#5c5a55" font-family="Inter, sans-serif">92</text>
+        </svg>
+        <div class="mt-2 grid grid-cols-3 gap-2 text-center">
+          <div class="bg-cream rounded-lg p-2"><p class="text-[10px] uppercase tracking-widest text-muted">Tracking</p><p class="font-display font-black">42 markers</p></div>
+          <div class="bg-cream rounded-lg p-2"><p class="text-[10px] uppercase tracking-widest text-muted">Out of range</p><p class="font-display font-black text-orange-dark">3</p></div>
+          <div class="bg-cream rounded-lg p-2"><p class="text-[10px] uppercase tracking-widest text-muted">Profiles</p><p class="font-display font-black">You · Mom</p></div>
+        </div>
+        <p class="text-[11px] text-muted mt-3">Illustration. Serum organizes numbers you provide; it is not a diagnosis.</p>
+      </div>
+      <div class="order-1 lg:order-2">
+        <p class="tag mb-4"><span>Serum · the lab tracker</span></p>
+        <h3 class="mt-0 text-3xl md:text-4xl leading-tight">Your bloodwork is scattered across six patient portals. Serum puts ten years on one chart.</h3>
+        <p class="text-muted mt-3 text-lg">Every doctor sees their own results. Nobody sees the trend. Serum reads the PDF from Quest or Labcorp, you confirm every line, and from then on each marker has a history: what's high, what's low, and what's been drifting for five years while every single report said "normal."</p>
+        <ul class="mt-5 space-y-3 list-none pl-0">
+          <li class="flex gap-3"><span class="shrink-0 w-8 h-8 rounded-full bg-olive text-white font-display font-black flex items-center justify-center">1</span><div><strong>Upload the PDF. Review every line. Done.</strong><span class="block text-muted">Serum reads the report, shows you each marker, value and range, and saves nothing until you say so. "LDL-C" and "LDL Cholesterol (calc)" land on the same chart.</span></div></li>
+          <li class="flex gap-3"><span class="shrink-0 w-8 h-8 rounded-full bg-olive text-white font-display font-black flex items-center justify-center">2</span><div><strong>See the trend your insurer never shows you.</strong><span class="block text-muted">Each marker as a chart across every draw, colored by status, with the reference band behind it. The biggest movers since last time, first.</span></div></li>
+          <li class="flex gap-3"><span class="shrink-0 w-8 h-8 rounded-full bg-olive text-white font-display font-black flex items-center justify-center">3</span><div><strong>Track Mom, too.</strong><span class="block text-muted">A profile for a parent whose cardiologist, nephrologist and GP don't talk to each other. One history, printable for the next appointment.</span></div></li>
+        </ul>
+        <div class="mt-6 flex flex-wrap gap-3 items-center">
+          <a href="/tools/serum/" class="btn btn-dark">How Serum works</a>
+          <span class="text-sm text-muted">One profile and three draws free · the whole history with <a href="/membership/">Vault</a></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 bg-ink text-cream rounded-brand p-6 md:p-8 grid gap-6 md:grid-cols-3">
+      <div><p class="eyebrow text-yellow mb-1">Private by construction</p><p class="text-cream/85 text-sm">No ads, no tracking, no sharing. In Case is encrypted so we can't read it. Serum has no third-party code at all. Delete everything any time.</p></div>
+      <div><p class="eyebrow text-yellow mb-1">Free for every subscriber</p><p class="text-cream/85 text-sm">The In Case printable and Serum with three draws come with the daily brief. Nothing to buy to see the value.</p></div>
+      <div><p class="eyebrow text-yellow mb-1">Vault for the household</p><p class="text-cream/85 text-sm">The living vault, the family link, unlimited lab history and profiles for parents, shared with your spouse. ${MEMBERSHIP.vault.founding}/year founding, locked for life. <a href="/membership/" class="text-yellow">Membership &rarr;</a></p></div>
+    </div>
+  </div>
+</section>
